@@ -74,10 +74,10 @@
 
 .light {
     --gms-bg: #ffffff;
-    --gms-elevated: #fafafa;
+    --gms-elevated: #ffffff;
     --gms-surface: #f4f4f5;
     --gms-surface-hover: #e4e4e7;
-    --gms-panel: #f1f5f9;
+    --gms-panel: #ffffff;
     --gms-text: #0f172a;
     --gms-text-secondary: #475569;
     --gms-text-muted: #94a3b8;
@@ -93,8 +93,8 @@
     --gms-error-surface: #ffe4e6;
     --gms-error-border: #fda4af;
     --gms-input: #ffffff;
-    --gms-gradient-from: transparent;
-    --gms-gradient-to: transparent;
+    --gms-gradient-from: #ffffff;
+    --gms-gradient-to: #ffffff;
     --gms-accent-gradient-from: #d97706;
     --gms-accent-gradient-to: #f59e0b;
 }

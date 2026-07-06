@@ -6,29 +6,54 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MembershipPlans\StoreMembershipPlanRequest;
 use App\Http\Requests\MembershipPlans\UpdateMembershipPlanRequest;
-use App\Http\Resources\Memberships\MembershipPlanResource;
 use App\Models\MembershipPlan;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 final class MembershipPlanController extends Controller
 {
-    public function index()
+    public function index(Request $request): Response
     {
-        return MembershipPlanResource::collection(
-            MembershipPlan::query()->latest()->paginate()
-        );
+        $search = $request->get('search');
+
+        return Inertia::render('MembershipPlans/Index', [
+            'plans' => MembershipPlan::query()
+                ->when($search, fn ($query, $search) => $query->where(function ($q) use ($search): void {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%");
+                }))
+                ->latest()
+                ->paginate(15),
+            'filters' => ['search' => $search ?? ''],
+        ]);
     }
 
-    public function store(StoreMembershipPlanRequest $request): MembershipPlanResource
+    public function store(StoreMembershipPlanRequest $request)
     {
         $plan = MembershipPlan::query()->create($request->validated());
 
-        return new MembershipPlanResource($plan);
+        return redirect()->route('portal.membership-plans')->with('success', 'Membership plan created successfully.');
     }
 
-    public function update(UpdateMembershipPlanRequest $request, MembershipPlan $membershipPlan): MembershipPlanResource
+    public function show(MembershipPlan $membershipPlan): Response
+    {
+        return Inertia::render('MembershipPlans/Show', [
+            'plan' => $membershipPlan,
+        ]);
+    }
+
+    public function update(UpdateMembershipPlanRequest $request, MembershipPlan $membershipPlan)
     {
         $membershipPlan->fill($request->validated())->save();
 
-        return new MembershipPlanResource($membershipPlan->refresh());
+        return redirect()->route('portal.membership-plans')->with('success', 'Membership plan updated successfully.');
+    }
+
+    public function destroy(MembershipPlan $membershipPlan)
+    {
+        $membershipPlan->delete();
+
+        return redirect()->route('portal.membership-plans')->with('success', 'Membership plan deleted successfully.');
     }
 }

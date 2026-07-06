@@ -16,6 +16,8 @@ const navigation = [
     { name: 'Members', href: '/portal/members', routeName: 'portal.members' },
     { name: 'Attendance', href: '/portal/attendance', routeName: 'portal.attendance' },
     { name: 'Memberships', href: '/portal/memberships', routeName: 'portal.memberships' },
+    { name: 'Gym Classes', href: '/portal/gym-classes', routeName: 'portal.gym-classes.index' },
+    { name: 'Sessions', href: '/portal/class-sessions', routeName: 'portal.class-sessions.index' },
     { name: 'Bookings', href: '/portal/bookings', routeName: 'portal.bookings' },
     { name: 'Inventory', href: '/portal/inventory', routeName: 'portal.inventory' },
     { name: 'Reports', href: '/portal/reports', routeName: 'portal.reports' },
