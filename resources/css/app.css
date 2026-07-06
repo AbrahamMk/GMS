@@ -1,0 +1,115 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.vue';
+
+@theme {
+    --font-sans: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --color-brand-50: oklch(0.985 0.018 105.5);
+    --color-brand-100: oklch(0.96 0.042 103.1);
+    --color-brand-200: oklch(0.912 0.08 100.8);
+    --color-brand-300: oklch(0.849 0.128 96.6);
+    --color-brand-400: oklch(0.774 0.165 92.2);
+    --color-brand-500: oklch(0.705 0.184 86.7);
+    --color-brand-600: oklch(0.625 0.182 80.9);
+    --color-brand-700: oklch(0.535 0.16 76.4);
+    --color-brand-800: oklch(0.45 0.131 73.2);
+    --color-brand-900: oklch(0.375 0.098 71.5);
+
+    --color-gms-bg: var(--gms-bg);
+    --color-gms-elevated: var(--gms-elevated);
+    --color-gms-surface: var(--gms-surface);
+    --color-gms-surface-hover: var(--gms-surface-hover);
+    --color-gms-panel: var(--gms-panel);
+    --color-gms-text: var(--gms-text);
+    --color-gms-text-secondary: var(--gms-text-secondary);
+    --color-gms-text-muted: var(--gms-text-muted);
+    --color-gms-text-inverse: var(--gms-text-inverse);
+    --color-gms-border: var(--gms-border);
+    --color-gms-accent: var(--gms-accent);
+    --color-gms-accent-hover: var(--gms-accent-hover);
+    --color-gms-accent-soft: var(--gms-accent-soft);
+    --color-gms-success: var(--gms-success);
+    --color-gms-success-surface: var(--gms-success-surface);
+    --color-gms-success-border: var(--gms-success-border);
+    --color-gms-error: var(--gms-error);
+    --color-gms-error-surface: var(--gms-error-surface);
+    --color-gms-error-border: var(--gms-error-border);
+    --color-gms-input: var(--gms-input);
+    --color-gms-gradient-from: var(--gms-gradient-from);
+    --color-gms-gradient-to: var(--gms-gradient-to);
+    --color-gms-accent-gradient-from: var(--gms-accent-gradient-from);
+    --color-gms-accent-gradient-to: var(--gms-accent-gradient-to);
+}
+
+:root {
+    --gms-bg: #020617;
+    --gms-elevated: rgba(15, 23, 42, 0.8);
+    --gms-surface: rgba(255, 255, 255, 0.05);
+    --gms-surface-hover: rgba(255, 255, 255, 0.1);
+    --gms-panel: rgba(15, 23, 42, 0.7);
+    --gms-text: #fff;
+    --gms-text-secondary: #cbd5e1;
+    --gms-text-muted: #94a3b8;
+    --gms-text-inverse: #020617;
+    --gms-border: rgba(255, 255, 255, 0.1);
+    --gms-accent: #fbbf24;
+    --gms-accent-hover: #fcd34d;
+    --gms-accent-soft: #fde68a;
+    --gms-success: #6ee7b7;
+    --gms-success-surface: rgba(52, 211, 153, 0.1);
+    --gms-success-border: rgba(52, 211, 153, 0.2);
+    --gms-error: #fda4af;
+    --gms-error-surface: rgba(244, 63, 94, 0.1);
+    --gms-error-border: rgba(244, 63, 94, 0.2);
+    --gms-input: rgba(15, 23, 42, 0.8);
+    --gms-gradient-from: rgba(217, 119, 6, 0.16);
+    --gms-gradient-to: rgba(14, 165, 233, 0.12);
+    --gms-accent-gradient-from: #f59e0b;
+    --gms-accent-gradient-to: #fbbf24;
+}
+
+.light {
+    --gms-bg: #ffffff;
+    --gms-elevated: #fafafa;
+    --gms-surface: #f4f4f5;
+    --gms-surface-hover: #e4e4e7;
+    --gms-panel: #f1f5f9;
+    --gms-text: #0f172a;
+    --gms-text-secondary: #475569;
+    --gms-text-muted: #94a3b8;
+    --gms-text-inverse: #ffffff;
+    --gms-border: #d4d4d8;
+    --gms-accent: #d97706;
+    --gms-accent-hover: #b45309;
+    --gms-accent-soft: #92400e;
+    --gms-success: #059669;
+    --gms-success-surface: #d1fae5;
+    --gms-success-border: #6ee7b7;
+    --gms-error: #e11d48;
+    --gms-error-surface: #ffe4e6;
+    --gms-error-border: #fda4af;
+    --gms-input: #ffffff;
+    --gms-gradient-from: transparent;
+    --gms-gradient-to: transparent;
+    --gms-accent-gradient-from: #d97706;
+    --gms-accent-gradient-to: #f59e0b;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-gms-bg text-gms-text antialiased;
+        background:
+            radial-gradient(circle at top left, var(--gms-gradient-from), transparent 28%),
+            radial-gradient(circle at top right, var(--gms-gradient-to), transparent 32%),
+            linear-gradient(180deg, var(--gms-bg) 0%, var(--gms-gradient-to) 100%);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+}
