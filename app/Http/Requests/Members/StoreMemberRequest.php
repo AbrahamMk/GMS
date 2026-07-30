@@ -31,7 +31,7 @@ final class StoreMemberRequest extends FormRequest
             'gender' => ['nullable', 'in:male,female,other'],
             'date_of_birth' => ['nullable', 'date'],
             'phone' => ['nullable', 'string', 'max:30'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255', Rule::unique('members', 'email')->where('branch_id', $branchId)],
             'address' => ['nullable', 'string'],
             'emergency_contact_name' => ['nullable', 'string', 'max:255'],
             'emergency_contact_phone' => ['nullable', 'string', 'max:30'],
