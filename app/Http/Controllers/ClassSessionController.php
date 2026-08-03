@@ -51,7 +51,9 @@ final class ClassSessionController extends Controller
     public function show(ClassSession $classSession): Response
     {
         return Inertia::render('ClassSessions/Show', [
-            'classSession' => new ClassSessionResource($classSession->load(['gymClass', 'bookings'])),
+            'classSession' => (new ClassSessionResource(
+                $classSession->load(['gymClass', 'bookings'])
+            ))->resolve(),
         ]);
     }
 

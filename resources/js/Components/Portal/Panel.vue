@@ -12,10 +12,10 @@ defineProps({
 </script>
 
 <template>
-    <section class="rounded-[2rem] border border-gms-border bg-gms-panel p-6 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+    <section class="rounded-gms-xl border border-gms-border bg-gms-panel p-5 md:p-6">
         <div v-if="eyebrow || title" class="mb-5">
-            <p v-if="eyebrow" class="text-xs uppercase tracking-[0.35em] text-gms-accent/80">{{ eyebrow }}</p>
-            <h2 class="mt-2 text-xl font-semibold text-gms-text">{{ title }}</h2>
+            <p v-if="eyebrow" class="text-xs font-medium uppercase tracking-[0.2em] text-gms-accent">{{ eyebrow }}</p>
+            <h2 class="mt-1 text-lg font-semibold text-gms-text">{{ title }}</h2>
         </div>
         <slot />
     </section>

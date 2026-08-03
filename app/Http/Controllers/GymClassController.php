@@ -41,7 +41,7 @@ final class GymClassController extends Controller
     public function show(GymClass $gymClass): Response
     {
         return Inertia::render('GymClasses/Show', [
-            'gymClass' => new GymClassResource($gymClass->load('trainer')),
+            'gymClass' => (new GymClassResource($gymClass->load('trainer')))->resolve(),
         ]);
     }
 

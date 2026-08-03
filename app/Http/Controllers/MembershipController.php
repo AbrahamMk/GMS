@@ -53,7 +53,9 @@ final class MembershipController extends Controller
     public function show(Membership $membership): Response
     {
         return Inertia::render('Memberships/Show', [
-            'membership' => new MembershipResource($membership->load(['member', 'plan'])),
+            'membership' => (new MembershipResource(
+                $membership->load(['member', 'plan'])
+            ))->resolve(),
         ]);
     }
 

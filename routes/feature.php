@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClassSessionController;
 use App\Http\Controllers\EquipmentCategoryController;
 use App\Http\Controllers\EquipmentItemController;
@@ -25,6 +26,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth', 'permission:access portal'])->group(function (): void {
+    Route::post('/branch/switch', [BranchController::class, 'switch'])->name('branch.switch');
+
     Route::prefix('portal')->group(function (): void {
         Route::get('/', [PortalController::class, 'dashboard'])->name('portal.dashboard');
         Route::get('/profile', [PortalController::class, 'profile'])->name('portal.profile');
@@ -86,6 +89,10 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
             ]);
         })->middleware('permission:manage memberships')->name('portal.memberships.create');
 
+        Route::get('/memberships/{membership}', [MembershipController::class, 'show'])
+            ->middleware('permission:view memberships')
+            ->name('portal.memberships.show');
+
         Route::get('/memberships/{membership}/edit', function (Membership $membership) {
             return Inertia::render('Memberships/Edit', [
                 'membership' => $membership->load(['member:id,first_name,last_name', 'plan:id,name']),
@@ -113,6 +120,10 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
         Route::get('/membership-plans/create', function () {
             return Inertia::render('MembershipPlans/Create');
         })->middleware('permission:manage membership plans')->name('portal.membership-plans.create');
+
+        Route::get('/membership-plans/{membershipPlan}', [MembershipPlanController::class, 'show'])
+            ->middleware('permission:view membership plans')
+            ->name('portal.membership-plans.show');
 
         Route::get('/membership-plans/{plan}/edit', function (MembershipPlan $plan) {
             return Inertia::render('MembershipPlans/Edit', [
@@ -199,29 +210,45 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
             Route::delete('/{equipmentCategory}', [EquipmentCategoryController::class, 'destroy'])->name('portal.equipment-categories.destroy');
         });
 
-        Route::prefix('gym-classes')->middleware('permission:manage classes')->group(function (): void {
-            Route::get('/', [GymClassController::class, 'index'])->name('portal.gym-classes.index');
+        Route::prefix('gym-classes')->group(function (): void {
+            Route::get('/', [GymClassController::class, 'index'])
+                ->middleware('permission:view classes|manage classes')
+                ->name('portal.gym-classes.index');
             Route::get('/create', function () {
                 return Inertia::render('GymClasses/Create');
-            })->name('portal.gym-classes.create');
-            Route::post('/', [GymClassController::class, 'store'])->name('portal.gym-classes.store');
-            Route::get('/{gymClass}', [GymClassController::class, 'show'])->name('portal.gym-classes.show');
+            })->middleware('permission:manage classes')->name('portal.gym-classes.create');
+            Route::post('/', [GymClassController::class, 'store'])
+                ->middleware('permission:manage classes')
+                ->name('portal.gym-classes.store');
+            Route::get('/{gymClass}', [GymClassController::class, 'show'])
+                ->middleware('permission:view classes|manage classes')
+                ->name('portal.gym-classes.show');
             Route::get('/{gymClass}/edit', function (GymClass $gymClass) {
                 $gymClass->load('trainer');
                 return Inertia::render('GymClasses/Edit', ['gymClass' => $gymClass]);
-            })->name('portal.gym-classes.edit');
-            Route::put('/{gymClass}', [GymClassController::class, 'update'])->name('portal.gym-classes.update');
-            Route::delete('/{gymClass}', [GymClassController::class, 'destroy'])->name('portal.gym-classes.destroy');
+            })->middleware('permission:manage classes')->name('portal.gym-classes.edit');
+            Route::put('/{gymClass}', [GymClassController::class, 'update'])
+                ->middleware('permission:manage classes')
+                ->name('portal.gym-classes.update');
+            Route::delete('/{gymClass}', [GymClassController::class, 'destroy'])
+                ->middleware('permission:manage classes')
+                ->name('portal.gym-classes.destroy');
         });
 
-        Route::prefix('class-sessions')->middleware('permission:manage classes')->group(function (): void {
-            Route::get('/', [ClassSessionController::class, 'index'])->name('portal.class-sessions.index');
+        Route::prefix('class-sessions')->group(function (): void {
+            Route::get('/', [ClassSessionController::class, 'index'])
+                ->middleware('permission:view classes|manage classes')
+                ->name('portal.class-sessions.index');
             Route::get('/create', function () {
                 $gymClasses = GymClass::query()->select('id', 'name')->where('is_active', true)->get();
                 return Inertia::render('ClassSessions/Create', ['gymClasses' => $gymClasses]);
-            })->name('portal.class-sessions.create');
-            Route::post('/', [ClassSessionController::class, 'store'])->name('portal.class-sessions.store');
-            Route::get('/{classSession}', [ClassSessionController::class, 'show'])->name('portal.class-sessions.show');
+            })->middleware('permission:manage classes')->name('portal.class-sessions.create');
+            Route::post('/', [ClassSessionController::class, 'store'])
+                ->middleware('permission:manage classes')
+                ->name('portal.class-sessions.store');
+            Route::get('/{classSession}', [ClassSessionController::class, 'show'])
+                ->middleware('permission:view classes|manage classes')
+                ->name('portal.class-sessions.show');
             Route::get('/{classSession}/edit', function (ClassSession $classSession) {
                 $classSession->load(['gymClass', 'bookings']);
                 $gymClasses = GymClass::query()->select('id', 'name')->where('is_active', true)->get();
@@ -229,9 +256,13 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     'classSession' => $classSession,
                     'gymClasses' => $gymClasses,
                 ]);
-            })->name('portal.class-sessions.edit');
-            Route::put('/{classSession}', [ClassSessionController::class, 'update'])->name('portal.class-sessions.update');
-            Route::delete('/{classSession}', [ClassSessionController::class, 'destroy'])->name('portal.class-sessions.destroy');
+            })->middleware('permission:manage classes')->name('portal.class-sessions.edit');
+            Route::put('/{classSession}', [ClassSessionController::class, 'update'])
+                ->middleware('permission:manage classes')
+                ->name('portal.class-sessions.update');
+            Route::delete('/{classSession}', [ClassSessionController::class, 'destroy'])
+                ->middleware('permission:manage classes')
+                ->name('portal.class-sessions.destroy');
         });
     });
 

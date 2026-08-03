@@ -91,6 +91,12 @@ function onSearch(value) {
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-2">
                                     <a
+                                        :href="`/portal/members/${member.id}`"
+                                        class="rounded-xl border border-gms-border bg-gms-surface px-3 py-1.5 text-sm text-gms-text-secondary transition hover:bg-gms-surface-hover hover:text-gms-text"
+                                    >
+                                        View
+                                    </a>
+                                    <a
                                         :href="`/portal/members/${member.id}/edit`"
                                         class="rounded-xl border border-gms-border bg-gms-surface px-3 py-1.5 text-sm text-gms-text-secondary transition hover:bg-gms-surface-hover hover:text-gms-text"
                                     >

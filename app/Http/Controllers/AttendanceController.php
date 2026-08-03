@@ -68,7 +68,9 @@ final class AttendanceController extends Controller
     public function show(AttendanceSession $attendanceSession): Response
     {
         return Inertia::render('Attendance/Show', [
-            'session' => new AttendanceSessionResource($attendanceSession->load('member')),
+            'session' => (new AttendanceSessionResource(
+                $attendanceSession->load('member')
+            ))->resolve(),
         ]);
     }
 

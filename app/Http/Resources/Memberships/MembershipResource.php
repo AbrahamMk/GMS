@@ -27,6 +27,15 @@ final class MembershipResource extends JsonResource
             'activated_at' => $this->activated_at,
             'notes' => $this->notes,
             'plan' => $this->relationLoaded('plan') ? new MembershipPlanResource($this->plan) : null,
+            'member' => $this->whenLoaded('member', fn () => [
+                'id' => $this->member->id,
+                'member_code' => $this->member->member_code,
+                'first_name' => $this->member->first_name,
+                'last_name' => $this->member->last_name,
+                'phone' => $this->member->phone,
+                'email' => $this->member->email,
+                'status' => $this->member->status,
+            ]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -25,6 +25,13 @@ final class ClassSessionResource extends JsonResource
                 'capacity' => $this->gymClass->capacity,
             ]),
             'bookings_count' => $this->whenLoaded('bookings', fn () => $this->bookings->count()),
+            'bookings' => $this->whenLoaded('bookings', fn () => $this->bookings->map(fn ($booking) => [
+                'id' => $booking->id,
+                'member_id' => $booking->member_id,
+                'status' => $booking->status,
+                'waitlist_position' => $booking->waitlist_position,
+                'created_at' => $booking->created_at,
+            ])->values()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

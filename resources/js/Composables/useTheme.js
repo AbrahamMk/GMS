@@ -1,8 +1,11 @@
+import { ref } from 'vue';
+
 function applyTheme(dark) {
     document.documentElement.classList.toggle('light', !dark);
 }
 export function useTheme() {
-    const isDark = ref(false);
+    const stored = localStorage.getItem('gms-theme');
+    const isDark = ref(stored ? stored === 'dark' : !window.matchMedia('(prefers-color-scheme: light)').matches);
     const toggle = () => {
         isDark.value = !isDark.value;
         localStorage.setItem('gms-theme', isDark.value ? 'dark' : 'light');

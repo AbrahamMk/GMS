@@ -111,6 +111,12 @@ function destroy(id) {
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
                                             <Link
+                                                :href="`/portal/class-sessions/${session.id}`"
+                                                class="rounded-xl border border-gms-border bg-gms-surface px-3 py-1.5 text-xs font-medium text-gms-text hover:bg-gms-surface-hover"
+                                            >
+                                                View
+                                            </Link>
+                                            <Link
                                                 :href="`/portal/class-sessions/${session.id}/edit`"
                                                 class="rounded-xl border border-gms-border bg-gms-surface px-3 py-1.5 text-xs font-medium text-gms-text hover:bg-gms-surface-hover"
                                             >

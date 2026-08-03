@@ -86,8 +86,11 @@ function statusClass(status) {
                                     <td class="px-4 py-3 text-gms-text-secondary">{{ membership.remaining_visits ?? '∞' }}</td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
-                                            <Link :href="`/portal/memberships/${membership.id}/edit`" class="rounded-xl border border-gms-border bg-gms-surface px-3 py-1.5 text-xs text-gms-text-secondary transition hover:bg-gms-surface-hover hover:text-gms-text">
+                                            <Link :href="`/portal/memberships/${membership.id}`" class="rounded-xl border border-gms-border bg-gms-surface px-3 py-1.5 text-xs text-gms-text-secondary transition hover:bg-gms-surface-hover hover:text-gms-text">
                                                 View
+                                            </Link>
+                                            <Link :href="`/portal/memberships/${membership.id}/edit`" class="rounded-xl border border-gms-border bg-gms-surface px-3 py-1.5 text-xs text-gms-text-secondary transition hover:bg-gms-surface-hover hover:text-gms-text">
+                                                Edit
                                             </Link>
                                             <button
                                                 type="button"
