@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MembershipPlanController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PortalController;
 use App\Models\AttendanceSession;
 use App\Models\ClassSession;
@@ -24,141 +26,77 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
         Route::get('/bookings', [PortalController::class, 'bookings'])->name('portal.bookings');
         Route::post('/bookings', [PortalController::class, 'bookClass'])->name('portal.bookings.store');
         Route::delete('/bookings', [PortalController::class, 'cancelBooking'])->name('portal.bookings.destroy');
-        Route::get('/members', function () {
-            return Inertia::render('Members/Index', [
-                'summary' => [
-                    'members' => Member::query()->count(),
-                    'active' => Member::query()->active()->count(),
-                    'memberships' => Membership::query()->active()->count(),
-                ],
-                'members' => Member::query()
-                    ->latest()
-                    ->limit(12)
-                    ->get()
-                    ->map(fn (Member $member): array => [
-                        'id' => $member->id,
-                        'member_code' => $member->member_code,
-                        'first_name' => $member->first_name,
-                        'last_name' => $member->last_name,
-                        'phone' => $member->phone,
-                        'email' => $member->email,
-                        'status' => $member->status,
-                    ])
-                    ->values(),
-            ]);
-        })->middleware('permission:view members')->name('portal.members');
+        Route::get('/members', [MemberController::class, 'index'])->middleware('permission:view members')->name('portal.members');
+        Route::get('/members/{member}', [MemberController::class, 'show'])->middleware('permission:view members')->name('portal.members.show');
         Route::get('/attendance', function () {
-            $now = app(BranchContext::class)->now();
+            $now = now();
 
             return Inertia::render('Attendance/Index', [
                 'summary' => [
-                    'todayCheckIns' => AttendanceSession::query()->whereDate('checked_in_at', $now)->count(),
-                    'openSessions' => AttendanceSession::query()->where('status', 'open')->count(),
+                    'todayCheckIns' => AttendanceSession::withoutGlobalScope(\App\Scopes\BranchScope::class)->whereDate('checked_in_at', $now)->count(),
+                    'openSessions'  => AttendanceSession::withoutGlobalScope(\App\Scopes\BranchScope::class)->where('status', 'open')->count(),
                 ],
-                'recentSessions' => AttendanceSession::query()
+                'recentSessions' => AttendanceSession::withoutGlobalScope(\App\Scopes\BranchScope::class)
                     ->with('member')
                     ->latest('checked_in_at')
                     ->limit(10)
                     ->get()
                     ->map(fn (AttendanceSession $session): array => [
-                        'id' => $session->id,
-                        'member' => $session->member?->only(['id', 'member_code', 'first_name', 'last_name']),
-                        'checked_in_at' => $session->checked_in_at,
+                        'id'             => $session->id,
+                        'member'         => $session->member?->only(['id', 'member_code', 'first_name', 'last_name']),
+                        'checked_in_at'  => $session->checked_in_at,
                         'checked_out_at' => $session->checked_out_at,
-                        'status' => $session->status,
+                        'status'         => $session->status,
                     ])
                     ->values(),
             ]);
         })->middleware('permission:view attendance')->name('portal.attendance');
-        Route::get('/memberships', function (\Illuminate\Http\Request $request) {
-            $user = $request->user();
-            $member = $user?->member()->first();
-
-            return Inertia::render('Memberships/Index', [
-                'plans' => MembershipPlan::query()
-                    ->active()
-                    ->latest()
-                    ->limit(12)
-                    ->get()
-                    ->map(fn (MembershipPlan $plan): array => [
-                        'id' => $plan->id,
-                        'code' => $plan->code,
-                        'name' => $plan->name,
-                        'type' => $plan->type,
-                        'price' => $plan->price,
-                        'currency' => $plan->currency,
-                        'duration_days' => $plan->duration_days,
-                        'visit_limit' => $plan->visit_limit,
-                    ])
-                    ->values(),
-                'activeMemberships' => Membership::query()
-                    ->with(['member', 'plan'])
-                    ->when($user?->hasRole('member') === true, static function ($query) use ($member): void {
-                        if ($member !== null) {
-                            $query->where('member_id', $member->getKey());
-                        }
-                    })
-                    ->active()
-                    ->latest('starts_at')
-                    ->limit(10)
-                    ->get()
-                    ->map(fn (Membership $membership): array => [
-                        'id' => $membership->id,
-                        'status' => $membership->status,
-                        'remaining_visits' => $membership->remaining_visits,
-                        'starts_at' => $membership->starts_at,
-                        'ends_at' => $membership->ends_at,
-                        'member' => $membership->member?->only(['id', 'member_code', 'first_name', 'last_name']),
-                        'plan' => $membership->plan?->only(['id', 'name', 'type', 'price', 'currency']),
-                    ])
-                    ->values(),
-            ]);
-        })->middleware('permission:view memberships')->name('portal.memberships');
+        Route::get('/memberships', [MembershipPlanController::class, 'index'])->middleware('permission:view memberships')->name('portal.memberships');
         Route::get('/inventory', function () {
             return Inertia::render('Inventory/Index', [
                 'summary' => [
-                    'stockItems' => StockItem::query()->count(),
-                    'lowStockItems' => StockItem::query()->whereColumn('current_stock', '<=', 'reorder_level')->count(),
-                    'equipmentItems' => EquipmentItem::query()->count(),
+                    'stockItems'     => StockItem::withoutGlobalScope(\App\Scopes\BranchScope::class)->count(),
+                    'lowStockItems'  => StockItem::withoutGlobalScope(\App\Scopes\BranchScope::class)->whereColumn('current_stock', '<=', 'reorder_level')->count(),
+                    'equipmentItems' => EquipmentItem::withoutGlobalScope(\App\Scopes\BranchScope::class)->count(),
                 ],
-                'stockItems' => StockItem::query()
+                'stockItems' => StockItem::withoutGlobalScope(\App\Scopes\BranchScope::class)
                     ->latest()
                     ->limit(8)
                     ->get()
                     ->map(fn (StockItem $item): array => [
-                        'id' => $item->id,
-                        'sku' => $item->sku,
-                        'name' => $item->name,
+                        'id'            => $item->id,
+                        'sku'           => $item->sku,
+                        'name'          => $item->name,
                         'current_stock' => $item->current_stock,
                         'reorder_level' => $item->reorder_level,
-                        'unit' => $item->unit,
-                        'is_active' => $item->is_active,
+                        'unit'          => $item->unit,
+                        'is_active'     => $item->is_active,
                     ])
                     ->values(),
-                'equipmentItems' => EquipmentItem::query()
+                'equipmentItems' => EquipmentItem::withoutGlobalScope(\App\Scopes\BranchScope::class)
                     ->latest()
                     ->limit(8)
                     ->get()
                     ->map(fn (EquipmentItem $item): array => [
-                        'id' => $item->id,
+                        'id'        => $item->id,
                         'asset_tag' => $item->asset_tag,
-                        'name' => $item->name,
-                        'status' => $item->status,
-                        'location' => $item->location,
+                        'name'      => $item->name,
+                        'status'    => $item->status,
+                        'location'  => $item->location,
                         'condition' => $item->condition,
                     ])
                     ->values(),
             ]);
         })->middleware('permission:view inventory')->name('portal.inventory');
         Route::get('/reports', function () {
-            $now = app(BranchContext::class)->now();
+            $now = now();
 
             return Inertia::render('Reports/Index', [
                 'summary' => [
-                    'members' => Member::query()->count(),
-                    'activeMemberships' => Membership::query()->active()->count(),
-                    'todayCheckIns' => AttendanceSession::query()->whereDate('checked_in_at', $now)->count(),
-                    'bookings' => ClassBooking::query()->count(),
+                    'members'           => Member::withoutGlobalScope(\App\Scopes\BranchScope::class)->count(),
+                    'activeMemberships' => Membership::withoutGlobalScope(\App\Scopes\BranchScope::class)->active()->count(),
+                    'todayCheckIns'     => AttendanceSession::withoutGlobalScope(\App\Scopes\BranchScope::class)->whereDate('checked_in_at', $now)->count(),
+                    'bookings'          => ClassBooking::withoutGlobalScope(\App\Scopes\BranchScope::class)->count(),
                 ],
                 'trend' => [
                     'labels' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -166,6 +104,23 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                 ],
             ]);
         })->middleware('permission:view reports')->name('portal.reports');
+
+        Route::get('/trainers', [\App\Http\Controllers\TrainerController::class, 'index'])->name('portal.trainers');
+        Route::get('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'show'])->name('portal.trainers.show');
+        Route::post('/trainers', [\App\Http\Controllers\TrainerController::class, 'store'])->name('portal.trainers.store');
+        Route::put('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'update'])->name('portal.trainers.update');
+        Route::delete('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'destroy'])->name('portal.trainers.destroy');
+
+        Route::get('/classes', [\App\Http\Controllers\AdminClassController::class, 'index'])->name('portal.classes');
+        Route::post('/classes', [\App\Http\Controllers\AdminClassController::class, 'store'])->name('portal.classes.store');
+        Route::put('/classes/{gymClass}', [\App\Http\Controllers\AdminClassController::class, 'update'])->name('portal.classes.update');
+        Route::delete('/classes/{gymClass}', [\App\Http\Controllers\AdminClassController::class, 'destroy'])->name('portal.classes.destroy');
+
+        Route::get('/payments', [PaymentController::class, 'index'])->name('portal.payments');
+
+        Route::get('/workouts', function () {
+            return Inertia::render('Workouts/Index', []);
+        })->name('portal.workouts');
     });
 
     Route::prefix('attendance')->middleware('permission:manage attendance')->group(function (): void {

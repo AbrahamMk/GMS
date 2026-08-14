@@ -30,6 +30,16 @@ final class PortalController extends Controller
         $now = app(BranchContext::class)->now();
 
         $activeMembership = $member?->memberships()->with('plan')->latest('starts_at')->first();
+        $attendanceTrend = collect(range(6, 0))->map(function (int $daysAgo) use ($now): array {
+            $day = $now->subDays($daysAgo);
+
+            return [
+                'label' => $day->format('D'),
+                'value' => AttendanceSession::query()
+                    ->whereBetween('checked_in_at', [$day->startOfDay(), $day->endOfDay()])
+                    ->count(),
+            ];
+        });
 
         return Inertia::render('Portal/Dashboard', [
             'member' => $member?->only([
@@ -58,6 +68,10 @@ final class PortalController extends Controller
                 'todayCheckIns' => AttendanceSession::query()->whereDate('checked_in_at', $now)->count(),
                 'bookingsThisWeek' => ClassBooking::query()->whereBetween('booked_at', [$now->startOfWeek(), $now->endOfWeek()])->count(),
                 'lowStockItems' => StockItem::query()->whereColumn('current_stock', '<=', 'reorder_level')->count(),
+            ],
+            'attendanceTrend' => [
+                'labels' => $attendanceTrend->pluck('label')->values(),
+                'values' => $attendanceTrend->pluck('value')->values(),
             ],
             'recentCheckIns' => AttendanceSession::query()
                 ->with('member')

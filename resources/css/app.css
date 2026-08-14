@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -46,57 +47,57 @@
 }
 
 :root {
-    --gms-bg: #020617;
-    --gms-elevated: rgba(15, 23, 42, 0.8);
-    --gms-surface: rgba(255, 255, 255, 0.05);
-    --gms-surface-hover: rgba(255, 255, 255, 0.1);
-    --gms-panel: rgba(15, 23, 42, 0.7);
-    --gms-text: #fff;
-    --gms-text-secondary: #cbd5e1;
-    --gms-text-muted: #94a3b8;
-    --gms-text-inverse: #020617;
-    --gms-border: rgba(255, 255, 255, 0.1);
-    --gms-accent: #fbbf24;
-    --gms-accent-hover: #fcd34d;
-    --gms-accent-soft: #fde68a;
-    --gms-success: #6ee7b7;
-    --gms-success-surface: rgba(52, 211, 153, 0.1);
-    --gms-success-border: rgba(52, 211, 153, 0.2);
+    --gms-bg: #111111;
+    --gms-elevated: #1a1a1a;
+    --gms-surface: #242424;
+    --gms-surface-hover: #2a2a2a;
+    --gms-panel: #1a1a1a;
+    --gms-text: #ffffff;
+    --gms-text-secondary: #d1d5db;
+    --gms-text-muted: #8a8a8a;
+    --gms-text-inverse: #111111;
+    --gms-border: #333333;
+    --gms-accent: #FF6B35;
+    --gms-accent-hover: #cbf933;
+    --gms-accent-soft: rgba(184, 245, 0, 0.15);
+    --gms-success: #5eead4;
+    --gms-success-surface: rgba(45, 212, 191, 0.11);
+    --gms-success-border: rgba(94, 234, 212, 0.22);
     --gms-error: #fda4af;
     --gms-error-surface: rgba(244, 63, 94, 0.1);
     --gms-error-border: rgba(244, 63, 94, 0.2);
-    --gms-input: rgba(15, 23, 42, 0.8);
-    --gms-gradient-from: rgba(217, 119, 6, 0.16);
-    --gms-gradient-to: rgba(14, 165, 233, 0.12);
-    --gms-accent-gradient-from: #f59e0b;
-    --gms-accent-gradient-to: #fbbf24;
+    --gms-input: #1a1a1a;
+    --gms-gradient-from: rgba(184, 245, 0, 0.05);
+    --gms-gradient-to: transparent;
+    --gms-accent-gradient-from: #d3ff52;
+    --gms-accent-gradient-to: #FF6B35;
 }
 
 .light {
-    --gms-bg: #ffffff;
-    --gms-elevated: #fafafa;
-    --gms-surface: #f4f4f5;
-    --gms-surface-hover: #e4e4e7;
-    --gms-panel: #f1f5f9;
-    --gms-text: #0f172a;
-    --gms-text-secondary: #475569;
-    --gms-text-muted: #94a3b8;
+    --gms-bg: #F5F5F5;
+    --gms-elevated: #ffffff;
+    --gms-surface: #ffffff;
+    --gms-surface-hover: #fafafa;
+    --gms-panel: #ffffff;
+    --gms-text: #111111;
+    --gms-text-secondary: #374151;
+    --gms-text-muted: #8a8a8a;
     --gms-text-inverse: #ffffff;
-    --gms-border: #d4d4d8;
-    --gms-accent: #d97706;
-    --gms-accent-hover: #b45309;
-    --gms-accent-soft: #92400e;
+    --gms-border: #e5e7eb;
+    --gms-accent: #FF6B35;
+    --gms-accent-hover: #e55a28;
+    --gms-accent-soft: rgba(184, 245, 0, 0.15);
     --gms-success: #059669;
     --gms-success-surface: #d1fae5;
-    --gms-success-border: #6ee7b7;
+    --gms-success-border: #a7f3d0;
     --gms-error: #e11d48;
     --gms-error-surface: #ffe4e6;
     --gms-error-border: #fda4af;
     --gms-input: #ffffff;
     --gms-gradient-from: transparent;
     --gms-gradient-to: transparent;
-    --gms-accent-gradient-from: #d97706;
-    --gms-accent-gradient-to: #f59e0b;
+    --gms-accent-gradient-from: #d3ff52;
+    --gms-accent-gradient-to: #FF6B35;
 }
 
 @layer base {
@@ -110,6 +111,27 @@
             radial-gradient(circle at top left, var(--gms-gradient-from), transparent 28%),
             radial-gradient(circle at top right, var(--gms-gradient-to), transparent 32%),
             linear-gradient(180deg, var(--gms-bg) 0%, var(--gms-gradient-to) 100%);
+        min-width: 320px;
         transition: background-color 0.3s ease, color 0.3s ease;
     }
+
+    ::selection {
+        background: color-mix(in srgb, var(--gms-accent) 45%, transparent);
+        color: var(--gms-text-inverse);
+    }
+
+    input, select, textarea {
+        @apply placeholder:text-gms-text-muted;
+    }
 }
+
+@layer components {
+    .gms-card {
+        @apply border border-gms-border bg-gms-panel shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-xl;
+    }
+
+    .gms-focus {
+        @apply outline-none ring-0 transition focus:border-gms-accent/60 focus:ring-4 focus:ring-gms-accent/10;
+    }
+}
+

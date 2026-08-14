@@ -38,6 +38,10 @@ final class AuthenticatedSessionController extends Controller
                 'current_branch_id' => $defaultBranch,
                 'last_login_at' => now(),
             ])->save();
+
+            if ($user->hasRole('member')) {
+                return redirect()->intended(route('member.dashboard'));
+            }
         }
 
         return redirect()->intended(route('portal.dashboard'));

@@ -4,6 +4,8 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { createApp, h } from 'vue';
 
+import { MotionPlugin } from '@vueuse/motion';
+
 const pages = import.meta.glob('./Pages/**/*.vue');
 
 createInertiaApp({
@@ -18,7 +20,7 @@ createInertiaApp({
         return (await page()).default;
     },
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) }).use(plugin).mount(el);
+        createApp({ render: () => h(App, props) }).use(plugin).use(MotionPlugin).mount(el);
     },
     progress: {
         color: '#f59e0b',
