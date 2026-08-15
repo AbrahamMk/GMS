@@ -74,7 +74,7 @@ defineProps({
                         class="bg-gms-surface p-6 rounded-3xl shadow-sm border border-gms-border"
                     >
                         <h3 class="font-black text-gms-text text-lg mb-4">Biography</h3>
-                        <p class="text-sm text-gms-text-secondary leading-relaxed font-medium">{{ trainer.bio || 'No biography provided.' }}</p>
+                        <p class="text-sm text-gms-text-secondary leading-relaxed ">{{ trainer.bio || 'No biography provided.' }}</p>
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@ defineProps({
                                 <div class="flex justify-between items-center">
                                     <div>
                                         <h4 class="font-black text-gms-text">{{ session.gym_class ? session.gym_class.name : 'Class' }}</h4>
-                                        <p class="text-sm text-gms-text-muted font-medium mt-1">{{ new Date(session.starts_at).toLocaleString() }}</p>
+                                        <p class="text-sm text-gms-text-muted  mt-1">{{ new Date(session.starts_at).toLocaleString() }}</p>
                                     </div>
                                     <span class="bg-[#d1fae5] text-[#059669] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
                                         {{ session.status }}
@@ -111,5 +111,6 @@ defineProps({
         </div>
     </AppLayout>
 </template>
+
 
 

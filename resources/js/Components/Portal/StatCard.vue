@@ -24,10 +24,11 @@ defineProps({
     >
         <div class="absolute top-0 left-0 h-1 w-0 bg-[#FF6B35] transition-all duration-300 group-hover:w-full"></div>
         
-        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted">{{ title }}</p>
+        <p class="text-[11px]  uppercase tracking-[0.2em] text-gms-text-muted">{{ title }}</p>
         <div class="mt-4 text-4xl font-black tracking-tight text-gms-text">{{ value }}</div>
-        <p v-if="hint" class="mt-3 text-sm font-medium text-gms-text-muted">{{ hint }}</p>
+        <p v-if="hint" class="mt-3 text-sm  text-gms-text-muted">{{ hint }}</p>
     </div>
 </template>
+
 
 

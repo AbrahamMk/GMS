@@ -68,7 +68,7 @@ const flashError = computed(() => page.props.flash?.error ?? null);
                         <ThemeToggle />
                         <div class="rounded-2xl border border-gms-border bg-gms-surface px-4 py-2 shadow-sm">
                             <p class="text-[10px] uppercase tracking-[0.2em] text-gms-text-muted">Signed in</p>
-                            <p class="font-medium text-gms-text">{{ authUser?.name ?? 'Guest' }}</p>
+                            <p class=" text-gms-text">{{ authUser?.name ?? 'Guest' }}</p>
                         </div>
                         <button
                             type="button"
@@ -103,7 +103,7 @@ const flashError = computed(() => page.props.flash?.error ?? null);
                         v-for="item in mainNav"
                         :key="item.name"
                         :href="item.href"
-                        class="shrink-0 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-150 lg:w-full"
+                        class="shrink-0 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm  transition-all duration-150 lg:w-full"
                         :class="isActive(item.href) ? 'bg-[#FF6B35] text-white shadow-[0_4px_14px_rgba(255,107,53,0.25)]' : 'text-gms-text-muted hover:bg-gms-bg hover:text-gms-text'"
                     >
                         <component :is="item.icon" class="h-[17px] w-[17px] shrink-0" :stroke-width="2.5" />
@@ -129,5 +129,6 @@ const flashError = computed(() => page.props.flash?.error ?? null);
         </div>
     </div>
 </template>
+
 
 

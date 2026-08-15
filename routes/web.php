@@ -20,12 +20,34 @@ Route::get('/', function () {
     $dbTrainers = \App\Models\Trainer::query()->where('is_active', true)->get()->map(fn ($t) => [
         'id' => $t->id,
         'name' => $t->first_name . ' ' . $t->last_name,
-        'role' => $t->specializations || 'Fitness Coach',
+        'role' => $t->specializations ?: 'Fitness Coach',
         'img' => $t->image_url,
     ]);
 
+    $dbPlans = \App\Models\MembershipPlan::query()->where('is_active', true)->get()->map(fn ($p) => [
+        'name' => $p->name,
+        'price' => '$' . number_format($p->price, 0),
+        'popular' => str_contains(strtolower($p->name), 'premium'),
+        'features' => array_filter(array_map('trim', explode("\n", $p->features ?? ''))),
+    ]);
+
+    $dbSchedule = \App\Models\ClassSession::query()
+        ->with(['gymClass', 'trainer'])
+        ->where('starts_at', '>=', now())
+        ->orderBy('starts_at')
+        ->limit(6)
+        ->get()
+        ->map(fn ($s) => [
+            'class' => $s->gymClass?->name ?? 'Fitness Class',
+            'trainer' => $s->trainer ? ($s->trainer->first_name . ' ' . $s->trainer->last_name) : 'Staff',
+            'time' => \Carbon\Carbon::parse($s->starts_at)->format('g:i A'),
+            'level' => 'All Levels', // Generic level
+        ]);
+
     return Inertia::render('Welcome', [
         'dbTrainers' => $dbTrainers,
+        'dbPlans' => $dbPlans,
+        'dbSchedule' => $dbSchedule,
     ]);
 });
 

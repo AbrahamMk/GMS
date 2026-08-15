@@ -46,19 +46,19 @@ const mockClasses = [
                         <span class="text-xl font-black">14</span>
                     </div>
                     <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs font-medium text-gms-text-muted uppercase">Wed</span>
+                        <span class="text-xs  text-gms-text-muted uppercase">Wed</span>
                         <span class="text-xl font-bold text-gms-text">15</span>
                     </div>
                     <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs font-medium text-gms-text-muted uppercase">Thu</span>
+                        <span class="text-xs  text-gms-text-muted uppercase">Thu</span>
                         <span class="text-xl font-bold text-gms-text">16</span>
                     </div>
                     <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs font-medium text-gms-text-muted uppercase">Fri</span>
+                        <span class="text-xs  text-gms-text-muted uppercase">Fri</span>
                         <span class="text-xl font-bold text-gms-text">17</span>
                     </div>
                     <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs font-medium text-gms-text-muted uppercase">Sat</span>
+                        <span class="text-xs  text-gms-text-muted uppercase">Sat</span>
                         <span class="text-xl font-bold text-gms-text">18</span>
                     </div>
                 </div>
@@ -124,5 +124,6 @@ const mockClasses = [
     scrollbar-width: none;
 }
 </style>
+
 
 

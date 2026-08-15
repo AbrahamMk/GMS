@@ -55,7 +55,7 @@ defineProps({
                 <div class="bg-[#FF6B35] rounded-3xl p-6 flex flex-col items-center justify-center text-black cursor-pointer hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_30px_rgba(184,245,0,0.2)] border-none">
                     <QrCode class="w-16 h-16 mb-4" />
                     <span class="font-black text-lg uppercase tracking-wider">Check In</span>
-                    <span class="text-xs opacity-75 mt-1 font-medium">Tap to show code</span>
+                    <span class="text-xs opacity-75 mt-1 ">Tap to show code</span>
                 </div>
             </div>
 
@@ -127,5 +127,6 @@ defineProps({
         </div>
     </MemberLayout>
 </template>
+
 
 

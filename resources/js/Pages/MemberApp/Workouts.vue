@@ -20,7 +20,7 @@ defineProps({
                     Training
                 </span>
                 <h1 class="text-3xl font-black tracking-tight text-gms-text">Assigned Workouts</h1>
-                <p class="text-gms-text-muted mt-1 font-medium">Your customized weekly routines and tracking.</p>
+                <p class="text-gms-text-muted mt-1 ">Your customized weekly routines and tracking.</p>
             </div>
 
             <!-- Workout List -->
@@ -66,5 +66,6 @@ defineProps({
         </div>
     </MemberLayout>
 </template>
+
 
 

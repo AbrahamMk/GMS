@@ -79,7 +79,7 @@ const isActive = (path) => {
             <!-- Sidebar Footer with theme toggle and logout -->
             <div class="p-4 border-t border-gms-border space-y-3">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gms-text-muted">Theme</span>
+                    <span class="text-xs  uppercase tracking-wider text-gms-text-muted">Theme</span>
                     <ThemeToggle />
                 </div>
                 <button
@@ -105,7 +105,7 @@ const isActive = (path) => {
                 :class="isActive('/member/dashboard') ? 'text-[#FF6B35]' : 'text-gms-text-secondary'"
             >
                 <Home class="w-5 h-5" />
-                <span class="text-[10px] font-medium">Home</span>
+                <span class="text-[10px] ">Home</span>
             </Link>
             
             <Link
@@ -114,7 +114,7 @@ const isActive = (path) => {
                 :class="isActive('/member/classes') ? 'text-[#FF6B35]' : 'text-gms-text-secondary'"
             >
                 <Calendar class="w-5 h-5" />
-                <span class="text-[10px] font-medium">Classes</span>
+                <span class="text-[10px] ">Classes</span>
             </Link>
             
             <Link
@@ -123,7 +123,7 @@ const isActive = (path) => {
                 :class="isActive('/member/workouts') ? 'text-[#FF6B35]' : 'text-gms-text-secondary'"
             >
                 <Dumbbell class="w-5 h-5" />
-                <span class="text-[10px] font-medium">Workouts</span>
+                <span class="text-[10px] ">Workouts</span>
             </Link>
             
             <Link
@@ -132,7 +132,7 @@ const isActive = (path) => {
                 :class="isActive('/member/profile') ? 'text-[#FF6B35]' : 'text-gms-text-secondary'"
             >
                 <User class="w-5 h-5" />
-                <span class="text-[10px] font-medium">Profile</span>
+                <span class="text-[10px] ">Profile</span>
             </Link>
         </nav>
     </div>
@@ -143,5 +143,6 @@ const isActive = (path) => {
     padding-bottom: env(safe-area-inset-bottom, 12px);
 }
 </style>
+
 
 

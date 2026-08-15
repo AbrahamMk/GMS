@@ -72,7 +72,7 @@ const submit = () => {
                     <p v-if="form.errors.password_confirmation" class="text-sm text-gms-error">{{ form.errors.password_confirmation }}</p>
                 </label>
 
-                <button type="submit" :disabled="form.processing" class="w-full rounded-2xl bg-gms-accent px-4 py-3 font-medium text-gms-text-inverse transition hover:bg-gms-accent-hover disabled:cursor-not-allowed disabled:opacity-60">
+                <button type="submit" :disabled="form.processing" class="w-full rounded-2xl bg-gms-accent px-4 py-3  text-gms-text-inverse transition hover:bg-gms-accent-hover disabled:cursor-not-allowed disabled:opacity-60">
                     Sign up
                 </button>
             </form>
@@ -84,4 +84,5 @@ const submit = () => {
         </div>
     </AuthLayout>
 </template>
+
 

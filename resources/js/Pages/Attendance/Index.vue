@@ -41,7 +41,7 @@ const formatTime = (dateStr) => {
                 :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 250, damping: 25 } }"
             >
                 <h1 class="text-3xl font-black tracking-tight text-gms-text">Attendance</h1>
-                <p class="text-gms-text-muted mt-1 font-medium">Check members in and out. View live session activity.</p>
+                <p class="text-gms-text-muted mt-1 ">Check members in and out. View live session activity.</p>
             </div>
 
             <!-- KPI Row -->
@@ -50,33 +50,33 @@ const formatTime = (dateStr) => {
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 25 } }"
-                    class="relative overflow-hidden rounded-3xl bg-[#111111] p-6 shadow-lg"
+                    class="relative overflow-hidden rounded-3xl bg-[#FF6B35] p-6 shadow-lg"
                 >
-                    <div class="absolute -right-3 -top-3 h-16 w-16 rounded-full bg-[#FF6B35]/10"></div>
-                    <UserCheck class="h-5 w-5 text-[#FF6B35] mb-3" />
-                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5a5a5a]">Today's Check-ins</p>
+                    <div class="absolute -right-3 -top-3 h-16 w-16 rounded-full bg-white/20"></div>
+                    <UserCheck class="h-5 w-5 text-white mb-3" />
+                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-white/80">Today's Check-ins</p>
                     <div class="mt-2 text-4xl font-black text-white">{{ summary.todayCheckIns ?? 0 }}</div>
                 </div>
                 <div
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 25, delay: 80 } }"
-                    class="group relative overflow-hidden rounded-3xl bg-white border border-gms-border p-6 shadow-sm hover:border-[#FF6B35] transition-all"
+                    class="group relative overflow-hidden rounded-3xl bg-gms-surface border border-gms-border p-6 shadow-sm hover:border-[#FF6B35] transition-all"
                 >
                     <div class="absolute top-0 left-0 h-1 w-0 bg-[#FF6B35] transition-all duration-300 group-hover:w-full"></div>
                     <Clock class="h-5 w-5 text-gms-text-muted mb-3" />
-                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted">Open Sessions</p>
+                    <p class="text-[11px]  uppercase tracking-[0.2em] text-gms-text-muted">Open Sessions</p>
                     <div class="mt-2 text-4xl font-black text-gms-text">{{ summary.openSessions ?? 0 }}</div>
                 </div>
                 <div
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 25, delay: 160 } }"
-                    class="group relative overflow-hidden rounded-3xl bg-white border border-gms-border p-6 shadow-sm hover:border-[#FF6B35] transition-all"
+                    class="group relative overflow-hidden rounded-3xl bg-gms-surface border border-gms-border p-6 shadow-sm hover:border-[#FF6B35] transition-all"
                 >
                     <div class="absolute top-0 left-0 h-1 w-0 bg-[#FF6B35] transition-all duration-300 group-hover:w-full"></div>
                     <Users class="h-5 w-5 text-gms-text-muted mb-3" />
-                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted">On Floor Now</p>
+                    <p class="text-[11px]  uppercase tracking-[0.2em] text-gms-text-muted">On Floor Now</p>
                     <div class="mt-2 text-4xl font-black text-gms-text">{{ summary.openSessions ?? 0 }}</div>
                 </div>
             </div>
@@ -87,7 +87,7 @@ const formatTime = (dateStr) => {
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 250, damping: 25, delay: 100 } }"
-                    class="xl:col-span-5 rounded-3xl border border-gms-border bg-white shadow-sm overflow-hidden"
+                    class="xl:col-span-5 rounded-3xl border border-gms-border bg-gms-surface shadow-sm overflow-hidden"
                 >
                     <!-- Tabs -->
                     <div class="flex border-b border-gms-border">
@@ -109,11 +109,11 @@ const formatTime = (dateStr) => {
 
                     <!-- Check-in form -->
                     <div v-if="activeTab === 'checkin'" class="p-6 space-y-4">
-                        <div class="flex items-center gap-3 p-4 bg-[#111111] rounded-2xl mb-5">
-                            <QrCode class="h-10 w-10 text-[#FF6B35] shrink-0" />
+                        <div class="flex items-center gap-3 p-4 bg-[#FF6B35] rounded-2xl mb-5">
+                            <QrCode class="h-10 w-10 text-white shrink-0" />
                             <div>
                                 <p class="font-bold text-white text-sm">QR Code Check-in</p>
-                                <p class="text-[11px] text-[#5a5a5a] mt-0.5">Scan or enter member QR token. Or use Manual ID entry below.</p>
+                                <p class="text-[11px] text-white/80 mt-0.5">Scan or enter member QR token. Or use Manual ID entry below.</p>
                             </div>
                         </div>
                         <form @submit.prevent="checkIn" class="space-y-3">
@@ -125,7 +125,7 @@ const formatTime = (dateStr) => {
                                     placeholder="Enter member ID"
                                     class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-3 text-gms-text font-semibold focus:outline-none focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 transition"
                                 />
-                                <p v-if="checkInForm.errors.member_id" class="text-xs font-medium text-[#e11d48] mt-1">{{ checkInForm.errors.member_id }}</p>
+                                <p v-if="checkInForm.errors.member_id" class="text-xs  text-[#e11d48] mt-1">{{ checkInForm.errors.member_id }}</p>
                             </div>
                             <div>
                                 <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted mb-1.5 block">QR Token <span class="text-[#5a5a5a] normal-case">(optional)</span></label>
@@ -183,7 +183,7 @@ const formatTime = (dateStr) => {
                             <button
                                 type="submit"
                                 :disabled="checkOutForm.processing"
-                                class="w-full bg-[#111111] text-white font-black rounded-xl py-3.5 hover:bg-[#242424] transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60"
+                                class="w-full bg-[#FF6B35] text-white font-black rounded-xl py-3.5 hover:bg-[#e55a28] transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60"
                             >
                                 {{ checkOutForm.processing ? 'Processing…' : 'Check Out Member' }}
                             </button>
@@ -196,7 +196,7 @@ const formatTime = (dateStr) => {
                     v-motion
                     :initial="{ opacity: 0, x: 20 }"
                     :enter="{ opacity: 1, x: 0, transition: { type: 'spring', stiffness: 250, damping: 25, delay: 150 } }"
-                    class="xl:col-span-7 rounded-3xl border border-gms-border bg-white shadow-sm"
+                    class="xl:col-span-7 rounded-3xl border border-gms-border bg-gms-surface shadow-sm"
                 >
                     <div class="flex items-center justify-between px-6 py-5 border-b border-gms-border">
                         <div>
@@ -208,13 +208,13 @@ const formatTime = (dateStr) => {
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B35] opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B35]"></span>
                             </span>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-gms-text-muted">Live</span>
+                            <span class="text-[10px]  uppercase tracking-widest text-gms-text-muted">Live</span>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
-                                <tr class="bg-gms-bg text-[11px] font-bold uppercase tracking-[0.15em] text-gms-text-muted">
+                                <tr class="bg-gms-bg text-[11px]  uppercase tracking-[0.15em] text-gms-text-muted">
                                     <th class="px-6 py-3 text-left">Member</th>
                                     <th class="px-6 py-3 text-left">Check-in</th>
                                     <th class="px-6 py-3 text-left">Check-out</th>
@@ -236,8 +236,8 @@ const formatTime = (dateStr) => {
                                                 {{ session.member?.first_name?.charAt(0) ?? '?' }}{{ session.member?.last_name?.charAt(0) ?? '' }}
                                             </div>
                                             <div>
-                                                <p class="font-medium text-gms-text">{{ session.member?.first_name }} {{ session.member?.last_name }}</p>
-                                                <p class="text-[10px] font-bold uppercase tracking-wider text-gms-text-muted">{{ session.member?.member_code }}</p>
+                                                <p class=" text-gms-text">{{ session.member?.first_name }} {{ session.member?.last_name }}</p>
+                                                <p class="text-[10px]  uppercase tracking-wider text-gms-text-muted">{{ session.member?.member_code }}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -254,7 +254,7 @@ const formatTime = (dateStr) => {
                                     </td>
                                 </tr>
                                 <tr v-if="!recentSessions.length">
-                                    <td colspan="4" class="px-6 py-12 text-center text-gms-text-muted font-medium">No attendance activity yet today.</td>
+                                    <td colspan="4" class="px-6 py-12 text-center text-gms-text-muted ">No attendance activity yet today.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -264,6 +264,7 @@ const formatTime = (dateStr) => {
         </div>
     </AppLayout>
 </template>
+
 
 
 

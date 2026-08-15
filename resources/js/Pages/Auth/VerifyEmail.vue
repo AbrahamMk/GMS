@@ -12,14 +12,15 @@ import { Link } from '@inertiajs/vue3';
                 The frontend is wired for the verification flow. Connect a mail driver to complete delivery.
             </p>
             <div class="mt-6 flex gap-3">
-                <Link href="/portal" class="rounded-2xl bg-gms-accent px-4 py-3 font-medium text-gms-text-inverse transition hover:bg-gms-accent-hover">
+                <Link href="/portal" class="rounded-2xl bg-gms-accent px-4 py-3  text-gms-text-inverse transition hover:bg-gms-accent-hover">
                     Go to portal
                 </Link>
-                <Link href="/login" class="rounded-2xl border border-gms-border bg-gms-surface px-4 py-3 font-medium text-gms-text transition hover:bg-gms-surface-hover">
+                <Link href="/login" class="rounded-2xl border border-gms-border bg-gms-surface px-4 py-3  text-gms-text transition hover:bg-gms-surface-hover">
                     Back to login
                 </Link>
             </div>
         </div>
     </AuthLayout>
 </template>
+
 

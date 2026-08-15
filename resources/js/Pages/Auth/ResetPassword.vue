@@ -51,7 +51,7 @@ const submit = () => {
                     <input v-model="form.password_confirmation" type="password" autocomplete="new-password" class="w-full rounded-2xl border border-gms-border bg-gms-input px-4 py-3 text-gms-text outline-none transition focus:border-gms-accent/40" />
                 </label>
 
-                <button type="submit" :disabled="form.processing" class="w-full rounded-2xl bg-gms-accent px-4 py-3 font-medium text-gms-text-inverse transition hover:bg-gms-accent-hover disabled:cursor-not-allowed disabled:opacity-60">
+                <button type="submit" :disabled="form.processing" class="w-full rounded-2xl bg-gms-accent px-4 py-3  text-gms-text-inverse transition hover:bg-gms-accent-hover disabled:cursor-not-allowed disabled:opacity-60">
                     Update password
                 </button>
             </form>
@@ -62,4 +62,5 @@ const submit = () => {
         </div>
     </AuthLayout>
 </template>
+
 

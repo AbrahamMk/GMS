@@ -62,7 +62,9 @@ const plans = [
 ];
 
 const props = defineProps({
-    dbTrainers: { type: Array, default: () => [] }
+    dbTrainers: { type: Array, default: () => [] },
+    dbPlans: { type: Array, default: () => [] },
+    dbSchedule: { type: Array, default: () => [] },
 });
 
 const defaultTrainers = [
@@ -80,12 +82,14 @@ const facilities = [
     { name: 'Recovery Area', img: facilityRecoveryImg, desc: 'Sauna and relaxation facilities.' },
 ];
 
-const schedule = [
+const scheduleList = props.dbSchedule && props.dbSchedule.length > 0 ? props.dbSchedule : [
     { class: 'HIIT', trainer: 'Sarah', time: '6:00 AM', level: 'Intermediate' },
     { class: 'Strength', trainer: 'Alex', time: '8:00 AM', level: 'All Levels' },
     { class: 'Yoga', trainer: 'Maya', time: '5:00 PM', level: 'Beginner' },
     { class: 'Cross Training', trainer: 'Daniel', time: '6:30 PM', level: 'Advanced' },
 ];
+
+const plansList = props.dbPlans && props.dbPlans.length > 0 ? props.dbPlans : plans;
 
 const testimonials = [
     { quote: "I joined three months ago and completely changed my routine. The trainers actually care about your progress.", name: "Emma R.", initials: "ER" },
@@ -127,9 +131,9 @@ const navLinks = [
                 </a>
 
                 <!-- Floating Glassmorphic Nav Pill (rounded-2xl / 16px radius, subtle transparency) -->
-                <nav class="hidden lg:flex items-center gap-6 px-7 py-2.5 bg-white/15 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.37)] border border-white/20">
+                <nav class="hidden lg:flex items-center gap-6 px-7 py-2.5 bg-gms-surface/15 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.37)] border border-white/20">
                     <a v-for="link in navLinks" :key="link.label" :href="link.href"
-                       class="text-sm font-medium text-white/90 hover:text-[#FF6B35] transition duration-200">{{ link.label }}</a>
+                       class="text-sm  text-white/90 hover:text-[#FF6B35] transition duration-200">{{ link.label }}</a>
                 </nav>
 
                 <div class="hidden lg:flex items-center gap-4">
@@ -155,7 +159,7 @@ const navLinks = [
                    @click="mobileOpen = false"
                    class="block text-white hover:text-[#FF6B35] font-bold text-sm py-2 transition">{{ link.label }}</a>
                 <div class="flex gap-3 pt-4 border-t border-white/10">
-                    <Link href="/login" class="flex-1 text-center border border-white/20 rounded-lg py-3 text-sm font-bold text-white hover:bg-white/5 transition">Login</Link>
+                    <Link href="/login" class="flex-1 text-center border border-white/20 rounded-lg py-3 text-sm font-bold text-white hover:bg-gms-surface/5 transition">Login</Link>
                     <Link href="/register" class="flex-1 text-center bg-[#FF6B35] text-white rounded-lg py-3 text-sm font-black hover:bg-[#e55a28] transition">Join Now</Link>
                 </div>
             </div>
@@ -190,7 +194,7 @@ const navLinks = [
                         SELF.
                     </h1>
 
-                    <p class="text-gray-400 text-base md:text-lg font-medium leading-relaxed mb-10 max-w-md">
+                    <p class="text-gray-400 text-base md:text-lg  leading-relaxed mb-10 max-w-md">
                         Train harder. Move better. Become stronger. Premium equipment, expert trainers, and a community built to help you reach your fitness goals.
                     </p>
 
@@ -200,7 +204,7 @@ const navLinks = [
                             Join Now <ArrowRight class="w-4 h-4" />
                         </Link>
                         <a href="#memberships"
-                            class="inline-flex items-center justify-center gap-2 border border-white/15 hover:border-white/30 px-8 py-4 rounded-md font-bold text-sm transition hover:bg-white/5 duration-200 uppercase tracking-wider">
+                            class="inline-flex items-center justify-center gap-2 border border-white/15 hover:border-white/30 px-8 py-4 rounded-md font-bold text-sm transition hover:bg-gms-surface/5 duration-200 uppercase tracking-wider">
                             Explore Memberships
                         </a>
                     </div>
@@ -227,7 +231,7 @@ const navLinks = [
                     <h2 class="text-4xl md:text-5xl font-black tracking-tighter leading-tight uppercase">
                         Everything You Need<br />to Get <span class="text-[#FF6B35]">Stronger.</span>
                     </h2>
-                    <p class="mt-4 text-gray-500 font-medium leading-relaxed">Whether you're just starting or pushing your limits, we've built the space and support you need to make progress.</p>
+                    <p class="mt-4 text-gray-500  leading-relaxed">Whether you're just starting or pushing your limits, we've built the space and support you need to make progress.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -244,7 +248,7 @@ const navLinks = [
                         </div>
                         <div>
                             <h3 class="text-xl font-black text-white mb-2">{{ item.title }}</h3>
-                            <p class="text-gray-500 font-medium leading-relaxed text-sm">{{ item.desc }}</p>
+                            <p class="text-gray-500  leading-relaxed text-sm">{{ item.desc }}</p>
                         </div>
                     </div>
                 </div>
@@ -278,7 +282,7 @@ const navLinks = [
                             <component :is="prog.icon" class="w-5 h-5 text-[#FF6B35]" />
                         </div>
                         <h3 class="text-xl font-black text-white mb-3 group-hover:text-[#FF6B35] transition uppercase tracking-tight">{{ prog.title }}</h3>
-                        <p class="text-gray-500 font-medium text-sm leading-relaxed mb-4">{{ prog.desc }}</p>
+                        <p class="text-gray-500  text-sm leading-relaxed mb-4">{{ prog.desc }}</p>
                         <div class="flex items-center gap-2 text-[#FF6B35] text-xs font-black uppercase tracking-wider group-hover:translate-x-1 transition duration-200">
                             Learn more <ArrowRight class="w-3.5 h-3.5" />
                         </div>
@@ -295,11 +299,11 @@ const navLinks = [
                     <h2 class="text-4xl md:text-5xl font-black tracking-tighter leading-tight uppercase">
                         FIND YOUR <span class="text-[#FF6B35]">FIT.</span>
                     </h2>
-                    <p class="mt-4 text-gray-500 font-medium max-w-xl mx-auto">Flexible plans designed to match your commitment and your budget.</p>
+                    <p class="mt-4 text-gray-500  max-w-xl mx-auto">Flexible plans designed to match your commitment and your budget.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-                    <div v-for="(plan, i) in plans" :key="plan.name"
+                    <div v-for="(plan, i) in plansList" :key="plan.name"
                         v-motion
                         :initial="{ opacity: 0, y: 30 }"
                         :visible="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 350, damping: 28, delay: i * 100 } }"
@@ -318,7 +322,7 @@ const navLinks = [
                             </div>
                         </div>
                         <ul class="flex-1 space-y-3 mb-8">
-                            <li v-for="feature in plan.features" :key="feature" class="flex items-start gap-3 text-sm font-medium text-gray-400">
+                            <li v-for="feature in plan.features" :key="feature" class="flex items-start gap-3 text-sm  text-gray-400">
                                 <CheckCircle2 class="w-4 h-4 text-[#FF6B35] shrink-0 mt-0.5" />
                                 {{ feature }}
                             </li>
@@ -327,7 +331,7 @@ const navLinks = [
                             class="w-full text-center py-3.5 font-black text-sm transition duration-200 uppercase tracking-wider hover:-translate-y-0.5 active:translate-y-0"
                             :class="plan.popular
                                 ? 'bg-[#FF6B35] text-white hover:bg-[#e55a28] shadow-[0_4px_20px_rgba(255,85,0,0.3)]'
-                                : 'border border-white/10 hover:border-white/20 hover:bg-white/5'">
+                                : 'border border-white/10 hover:border-white/20 hover:bg-gms-surface/5'">
                             Choose {{ plan.name }}
                         </Link>
                     </div>
@@ -384,7 +388,7 @@ const navLinks = [
                     <h2 class="text-4xl md:text-5xl font-black tracking-tighter leading-tight uppercase mb-4">
                         BUILT FOR <span class="text-[#FF6B35]">PERFORMANCE.</span>
                     </h2>
-                    <p class="text-gray-500 font-medium max-w-2xl mx-auto">A space designed to make every workout count. Premium equipment, spacious training areas, clean facilities, and everything you need to train comfortably.</p>
+                    <p class="text-gray-500  max-w-2xl mx-auto">A space designed to make every workout count. Premium equipment, spacious training areas, clean facilities, and everything you need to train comfortably.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -400,7 +404,7 @@ const navLinks = [
                         <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF6B35] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                         <div class="absolute bottom-0 left-0 right-0 p-6">
                             <h3 class="font-black text-xl text-white mb-1 uppercase tracking-tight">{{ facility.name }}</h3>
-                            <p class="text-gray-400 text-sm font-medium">{{ facility.desc }}</p>
+                            <p class="text-gray-400 text-sm ">{{ facility.desc }}</p>
                         </div>
                     </div>
                 </div>
@@ -435,7 +439,7 @@ const navLinks = [
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
-                            <tr v-for="row in schedule" :key="row.class"
+                            <tr v-for="row in scheduleList" :key="row.class"
                                 class="bg-[#0D0D0D] hover:bg-[#141414] transition duration-200 group">
                                 <td class="px-6 py-5 font-black text-white uppercase tracking-tight">{{ row.class }}</td>
                                 <td class="px-6 py-5 font-semibold text-gray-400">{{ row.trainer }}</td>
@@ -445,7 +449,7 @@ const navLinks = [
                                     </span>
                                 </td>
                                 <td class="px-6 py-5">
-                                    <span class="text-[10px] font-black uppercase tracking-wider bg-white/5 border border-white/10 px-2.5 py-1 text-gray-400">{{ row.level }}</span>
+                                    <span class="text-[10px] font-black uppercase tracking-wider bg-gms-surface/5 border border-white/10 px-2.5 py-1 text-gray-400">{{ row.level }}</span>
                                 </td>
                                 <td class="px-6 py-5 text-right">
                                     <Link href="/register"
@@ -479,7 +483,7 @@ const navLinks = [
                         <div class="flex gap-0.5 mb-6">
                             <Star v-for="s in 5" :key="s" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]" />
                         </div>
-                        <p class="text-gray-300 font-medium leading-relaxed flex-1 text-base mb-6">"{{ t.quote }}"</p>
+                        <p class="text-gray-300  leading-relaxed flex-1 text-base mb-6">"{{ t.quote }}"</p>
                         <div class="flex items-center gap-3 pt-5 border-t border-white/5">
                             <div class="w-10 h-10 bg-[#FF6B35]/15 border border-[#FF6B35]/30 flex items-center justify-center text-[#FF6B35] text-xs font-black">{{ t.initials }}</div>
                             <span class="font-bold text-white text-sm">{{ t.name }}</span>
@@ -499,7 +503,7 @@ const navLinks = [
                 <h2 class="text-5xl md:text-7xl font-black tracking-tighter leading-none uppercase mb-6 text-white">
                     READY TO GET<br />STRONGER?
                 </h2>
-                <p class="text-white/75 text-lg font-medium mb-10 max-w-xl mx-auto">
+                <p class="text-white/75 text-lg  mb-10 max-w-xl mx-auto">
                     Your goals won't achieve themselves. Start your fitness journey today.
                 </p>
                 <Link href="/register"
@@ -518,7 +522,7 @@ const navLinks = [
                         <a href="#home" class="text-3xl font-black tracking-tighter uppercase block mb-3">
                             FIT<span class="text-[#FF6B35]">HUB</span>
                         </a>
-                        <p class="text-gray-500 text-sm font-medium leading-relaxed mb-6">Train. Push. Progress.</p>
+                        <p class="text-gray-500 text-sm  leading-relaxed mb-6">Train. Push. Progress.</p>
                         <div class="flex gap-3">
                             <a href="#" class="w-10 h-10 border border-white/10 flex items-center justify-center text-gray-500 hover:text-[#FF6B35] hover:border-[#FF6B35]/30 transition">
                                 <Share2 class="w-4 h-4" />
@@ -534,7 +538,7 @@ const navLinks = [
                         <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6">Explore</h4>
                         <ul class="space-y-3">
                             <li v-for="link in [{ label: 'About', href: '#why' }, { label: 'Memberships', href: '#memberships' }, { label: 'Classes', href: '#programs' }, { label: 'Trainers', href: '#trainers' }, { label: 'Facilities', href: '#facilities' }]" :key="link.label">
-                                <a :href="link.href" class="text-sm font-medium text-gray-500 hover:text-white transition">{{ link.label }}</a>
+                                <a :href="link.href" class="text-sm  text-gray-500 hover:text-white transition">{{ link.label }}</a>
                             </li>
                         </ul>
                     </div>
@@ -544,7 +548,7 @@ const navLinks = [
                         <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6">Support</h4>
                         <ul class="space-y-3">
                             <li v-for="link in ['Contact', 'FAQ', 'Membership Policy', 'Privacy Policy']" :key="link">
-                                <a href="#" class="text-sm font-medium text-gray-500 hover:text-white transition">{{ link }}</a>
+                                <a href="#" class="text-sm  text-gray-500 hover:text-white transition">{{ link }}</a>
                             </li>
                         </ul>
                     </div>
@@ -553,15 +557,15 @@ const navLinks = [
                     <div>
                         <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6">Contact</h4>
                         <ul class="space-y-4">
-                            <li class="flex items-start gap-3 text-sm font-medium text-gray-500">
+                            <li class="flex items-start gap-3 text-sm  text-gray-500">
                                 <MapPin class="w-4 h-4 text-[#FF6B35] shrink-0 mt-0.5" />
                                 Addis Ababa, Ethiopia
                             </li>
-                            <li class="flex items-center gap-3 text-sm font-medium text-gray-500">
+                            <li class="flex items-center gap-3 text-sm  text-gray-500">
                                 <Phone class="w-4 h-4 text-[#FF6B35] shrink-0" />
                                 +251 XXX XXX XXX
                             </li>
-                            <li class="flex items-center gap-3 text-sm font-medium text-gray-500">
+                            <li class="flex items-center gap-3 text-sm  text-gray-500">
                                 <Mail class="w-4 h-4 text-[#FF6B35] shrink-0" />
                                 hello@fithub.com
                             </li>
@@ -592,7 +596,7 @@ const navLinks = [
                     </div>
                 </div>
 
-                <p class="text-gray-300 font-medium leading-relaxed">{{ selectedProgram.desc }}</p>
+                <p class="text-gray-300  leading-relaxed">{{ selectedProgram.desc }}</p>
 
                 <div class="space-y-3 pt-4 border-t border-white/10 text-sm">
                     <div class="flex items-center justify-between text-gray-400">
@@ -610,7 +614,7 @@ const navLinks = [
                 </div>
 
                 <div class="pt-4 flex gap-4">
-                    <button @click="closeProgramModal" class="flex-1 py-3 border border-white/10 rounded-xl font-bold text-sm text-gray-300 hover:bg-white/5 transition">
+                    <button @click="closeProgramModal" class="flex-1 py-3 border border-white/10 rounded-xl font-bold text-sm text-gray-300 hover:bg-gms-surface/5 transition">
                         Close
                     </button>
                     <Link href="/register" class="flex-1 text-center py-3 bg-[#FF6B35] text-white rounded-xl font-black text-sm uppercase tracking-wider hover:bg-[#e55a28] transition shadow-[0_4px_14px_rgba(255,107,53,0.35)]">
@@ -622,6 +626,7 @@ const navLinks = [
 
     </div>
 </template>
+
 
 
 

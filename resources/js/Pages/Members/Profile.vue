@@ -112,7 +112,7 @@ const submit = () => {
 
                         <div class="flex items-center justify-between gap-4">
                             <p class="text-sm text-gms-text-muted">Current display: {{ displayName || 'Unnamed member' }}</p>
-                            <button type="submit" :disabled="form.processing" class="rounded-2xl bg-gms-accent px-5 py-3 font-medium text-gms-text-inverse transition hover:bg-gms-accent-hover disabled:cursor-not-allowed disabled:opacity-60">
+                            <button type="submit" :disabled="form.processing" class="rounded-2xl bg-gms-accent px-5 py-3  text-gms-text-inverse transition hover:bg-gms-accent-hover disabled:cursor-not-allowed disabled:opacity-60">
                                 Save profile
                             </button>
                         </div>
@@ -145,4 +145,5 @@ const submit = () => {
         </div>
     </AppLayout>
 </template>
+
 

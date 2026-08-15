@@ -43,7 +43,7 @@ const updateProfile = () => {
                     Account
                 </span>
                 <h1 class="text-3xl font-black tracking-tight text-gms-text">Personal Profile</h1>
-                <p class="text-gms-text-muted mt-1 font-medium">Manage your personal information and contact details.</p>
+                <p class="text-gms-text-muted mt-1 ">Manage your personal information and contact details.</p>
             </div>
 
             <!-- Profile Form Card -->
@@ -120,5 +120,6 @@ const updateProfile = () => {
         </div>
     </MemberLayout>
 </template>
+
 
 

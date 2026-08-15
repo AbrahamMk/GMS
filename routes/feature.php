@@ -88,7 +88,7 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     ->values(),
             ]);
         })->middleware('permission:view inventory')->name('portal.inventory');
-        Route::get('/reports', function () {
+        Route::get('/finance', function () {
             $now = now();
 
             return Inertia::render('Reports/Index', [
@@ -103,7 +103,7 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     'values' => [12, 18, 21, 16, 28, 35, 31],
                 ],
             ]);
-        })->middleware('permission:view reports')->name('portal.reports');
+        })->middleware('permission:view reports')->name('portal.finance');
 
         Route::get('/trainers', [\App\Http\Controllers\TrainerController::class, 'index'])->name('portal.trainers');
         Route::get('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'show'])->name('portal.trainers.show');

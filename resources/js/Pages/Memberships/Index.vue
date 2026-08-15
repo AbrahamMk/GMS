@@ -106,26 +106,26 @@ const formatCurrency = (amount, currency) => {
                     <div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Name</label>
+                                <label class="text-sm  text-gray-700">Name</label>
                                 <input v-model="form.name" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]" placeholder="e.g. Pro Monthly">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Code</label>
+                                <label class="text-sm  text-gray-700">Code</label>
                                 <input v-model="form.code" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]" placeholder="e.g. PRO_MO">
                             </div>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Price</label>
+                                <label class="text-sm  text-gray-700">Price</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-2 text-gray-500">$</span>
                                     <input v-model="form.price" type="number" step="0.01" class="w-full pl-8 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]" placeholder="0.00">
                                 </div>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Type</label>
-                                <select v-model="form.type" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] bg-white">
+                                <label class="text-sm  text-gray-700">Type</label>
+                                <select v-model="form.type" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] bg-gms-surface">
                                     <option value="recurring">Recurring</option>
                                     <option value="one-time">One-time</option>
                                 </select>
@@ -134,11 +134,11 @@ const formatCurrency = (amount, currency) => {
 
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Duration (Days)</label>
+                                <label class="text-sm  text-gray-700">Duration (Days)</label>
                                 <input v-model="form.duration_days" type="number" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]" placeholder="e.g. 30">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Visit Limit</label>
+                                <label class="text-sm  text-gray-700">Visit Limit</label>
                                 <input v-model="form.visit_limit" type="number" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]" placeholder="Leave blank for unlimited">
                             </div>
                         </div>
@@ -184,13 +184,13 @@ const formatCurrency = (amount, currency) => {
                                     </div>
                                 </div>
                                 <h3 class="font-black text-gms-text">{{ plan.name }}</h3>
-                                <p class="text-sm font-medium text-gray-400">{{ plan.code }}</p>
+                                <p class="text-sm  text-gray-400">{{ plan.code }}</p>
                             </div>
                             
                             <div>
                                 <div class="my-4">
                                     <span class="text-4xl font-extrabold text-gms-text">{{ formatCurrency(plan.price, plan.currency) }}</span>
-                                    <span v-if="plan.duration_days" class="text-gray-500 font-medium"> / {{ plan.duration_days }} days</span>
+                                    <span v-if="plan.duration_days" class="text-gray-500 "> / {{ plan.duration_days }} days</span>
                                 </div>
                                 
                                 <div class="space-y-3 mt-6">
@@ -236,7 +236,7 @@ const formatCurrency = (amount, currency) => {
                                             {{ membership.member?.first_name }} {{ membership.member?.last_name }}
                                         </p>
                                         <div class="flex items-center text-xs text-gray-500 mt-0.5 gap-2">
-                                            <span class="font-medium text-[#8ac900]">{{ membership.plan?.name }}</span>
+                                            <span class=" text-[#8ac900]">{{ membership.plan?.name }}</span>
                                             <span>•</span>
                                             <span>{{ membership.remaining_visits ?? 'Unlimited' }} visits left</span>
                                         </div>
@@ -259,6 +259,7 @@ const formatCurrency = (amount, currency) => {
         </div>
     </AppLayout>
 </template>
+
 
 
 

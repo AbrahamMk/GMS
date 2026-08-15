@@ -44,7 +44,7 @@ const cancel = (bookingId) => {
                             </div>
                             <button
                                 type="button"
-                                class="mt-5 w-full rounded-2xl bg-gms-accent px-4 py-3 font-medium text-gms-text-inverse transition hover:bg-gms-accent-hover"
+                                class="mt-5 w-full rounded-2xl bg-gms-accent px-4 py-3  text-gms-text-inverse transition hover:bg-gms-accent-hover"
                                 @click="book(session.id)"
                             >
                                 Book session
@@ -58,7 +58,7 @@ const cancel = (bookingId) => {
                 <Panel eyebrow="My schedule" title="Current bookings">
                     <div class="space-y-3">
                         <div v-for="booking in myBookings" :key="booking.id" class="rounded-2xl border border-gms-border bg-gms-surface px-4 py-3">
-                            <p class="font-medium text-gms-text">{{ booking.session?.name }}</p>
+                            <p class=" text-gms-text">{{ booking.session?.name }}</p>
                             <p class="text-sm text-gms-text-muted">{{ booking.session?.starts_at }} - {{ booking.status }}</p>
                             <p class="text-sm text-gms-text-muted">
                                 {{ booking.waitlist_position ? `Waitlist #${booking.waitlist_position}` : 'Confirmed' }}
@@ -78,4 +78,5 @@ const cancel = (bookingId) => {
         </div>
     </AppLayout>
 </template>
+
 

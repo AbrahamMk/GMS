@@ -26,7 +26,7 @@ defineProps({
                 <div class="max-w-2xl">
                     <Badge class="mb-5 inline-flex items-center gap-1.5 bg-gms-bg text-gms-text hover:bg-gms-surface-hover border-none px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em]"><Sparkles class="h-3.5 w-3.5 text-[#FF6B35]" /> Class Schedule</Badge>
                     <h2 class="text-3xl font-black tracking-tight text-gms-text sm:text-4xl">Classes &amp; Sessions</h2>
-                    <p class="mt-3 max-w-xl text-base font-medium leading-relaxed text-gms-text-muted">Create gym classes, schedule training sessions, set capacities, and assign coaches.</p>
+                    <p class="mt-3 max-w-xl text-base  leading-relaxed text-gms-text-muted">Create gym classes, schedule training sessions, set capacities, and assign coaches.</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex flex-wrap gap-3">
                     <Button :as="Link" href="/portal/classes?new=1" class="bg-[#FF6B35] text-white hover:bg-[#e55a28] font-bold rounded-xl shadow-[0_4px_14px_rgba(184,245,0,0.3)] border-none transition-all hover:-translate-y-0.5 active:translate-y-0">+ New Class</Button>
@@ -48,7 +48,7 @@ defineProps({
                                 {{ gymClass.is_active ? 'Active' : 'Draft' }}
                             </span>
                         </div>
-                        <p class="text-sm text-gms-text-muted font-medium mb-6 line-clamp-2">{{ gymClass.description || 'No description provided.' }}</p>
+                        <p class="text-sm text-gms-text-muted  mb-6 line-clamp-2">{{ gymClass.description || 'No description provided.' }}</p>
                         
                         <div class="grid grid-cols-2 gap-4 mb-4 text-sm font-semibold">
                             <div class="bg-gms-bg p-3 rounded-2xl border border-gms-border">
@@ -79,5 +79,6 @@ defineProps({
         </div>
     </AppLayout>
 </template>
+
 
 

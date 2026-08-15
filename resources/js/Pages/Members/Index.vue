@@ -64,7 +64,7 @@ const getStatusColor = (status) => {
                     <div>
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-500">{{ stat.title }}</p>
+                                <p class="text-sm  text-gray-500">{{ stat.title }}</p>
                                 <h3 class="text-3xl font-bold text-gms-text mt-2">{{ stat.value }}</h3>
                             </div>
                             <div :class="`p-3 rounded-xl ${stat.bg}`">
@@ -82,7 +82,7 @@ const getStatusColor = (status) => {
                 :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: 300 } }"
                 class="border-gray-100 shadow-sm"
             >
-                <div class="p-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-t-xl">
+                <div class="p-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gms-surface rounded-t-xl">
                     <div class="relative w-full sm:max-w-xs">
                         <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input 
@@ -101,13 +101,13 @@ const getStatusColor = (status) => {
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-100">
                             <tr>
-                                <th class="px-6 py-4 font-medium">Member</th>
-                                <th class="px-6 py-4 font-medium">Contact</th>
-                                <th class="px-6 py-4 font-medium">Status</th>
-                                <th class="px-6 py-4 font-medium text-right">Actions</th>
+                                <th class="px-6 py-4 ">Member</th>
+                                <th class="px-6 py-4 ">Contact</th>
+                                <th class="px-6 py-4 ">Status</th>
+                                <th class="px-6 py-4  text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 bg-white">
+                        <tbody class="divide-y divide-gray-100 bg-gms-surface">
                             <tr 
                                 v-for="(member, index) in members" 
                                 :key="member.id"
@@ -125,7 +125,7 @@ const getStatusColor = (status) => {
                                             <p class="font-semibold text-gms-text group-hover:text-[#8ac900] transition-colors">
                                                 {{ member.first_name }} {{ member.last_name }}
                                             </p>
-                                            <p class="text-xs text-gray-500 font-medium">{{ member.member_code }}</p>
+                                            <p class="text-xs text-gray-500 ">{{ member.member_code }}</p>
                                         </div>
                                     </div>
                                 </td>
@@ -156,7 +156,7 @@ const getStatusColor = (status) => {
                 </div>
                 
                 <div class="p-4 border-t border-gray-100 bg-gray-50/30 flex items-center justify-between rounded-b-xl">
-                    <p class="text-xs text-gray-500">Showing <span class="font-medium text-gms-text">{{ members.length }}</span> members</p>
+                    <p class="text-xs text-gray-500">Showing <span class=" text-gms-text">{{ members.length }}</span> members</p>
                     <div class="flex gap-2">
                         <Button variant="outline" size="sm" disabled>Previous</Button>
                         <Button variant="outline" size="sm" disabled>Next</Button>
@@ -166,6 +166,7 @@ const getStatusColor = (status) => {
         </div>
     </AppLayout>
 </template>
+
 
 
 

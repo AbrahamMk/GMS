@@ -26,9 +26,10 @@ const max = computed(() => Math.max(...props.values, 1));
                     />
                 </div>
                 <div class="text-xs text-gms-text-muted">{{ labels[index] ?? index + 1 }}</div>
-                <div class="text-xs font-medium text-gms-text">{{ value }}</div>
+                <div class="text-xs  text-gms-text">{{ value }}</div>
             </div>
         </div>
     </div>
 </template>
+
 
