@@ -105,6 +105,23 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
             ]);
         })->middleware('permission:view reports')->name('portal.finance');
 
+        Route::get('/reports', function () {
+            $now = now();
+
+            return Inertia::render('Reports/Index', [
+                'summary' => [
+                    'members'           => Member::withoutGlobalScope(\App\Scopes\BranchScope::class)->count(),
+                    'activeMemberships' => Membership::withoutGlobalScope(\App\Scopes\BranchScope::class)->active()->count(),
+                    'todayCheckIns'     => AttendanceSession::withoutGlobalScope(\App\Scopes\BranchScope::class)->whereDate('checked_in_at', $now)->count(),
+                    'bookings'          => ClassBooking::withoutGlobalScope(\App\Scopes\BranchScope::class)->count(),
+                ],
+                'trend' => [
+                    'labels' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    'values' => [12, 18, 21, 16, 28, 35, 31],
+                ],
+            ]);
+        })->middleware('permission:view reports')->name('portal.reports');
+
         Route::get('/trainers', [\App\Http\Controllers\TrainerController::class, 'index'])->name('portal.trainers');
         Route::get('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'show'])->name('portal.trainers.show');
         Route::post('/trainers', [\App\Http\Controllers\TrainerController::class, 'store'])->name('portal.trainers.store');
