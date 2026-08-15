@@ -78,3 +78,4 @@ const cancel = (bookingId) => {
         </div>
     </AppLayout>
 </template>
+

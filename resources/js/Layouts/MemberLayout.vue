@@ -42,7 +42,7 @@ const isActive = (path) => {
                 <Link
                     href="/member/dashboard"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300"
-                    :class="isActive('/member/dashboard') ? 'bg-[#FF6B35] text-[#111111] font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
+                    :class="isActive('/member/dashboard') ? 'bg-[#FF6B35] text-white font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
                 >
                     <Home class="w-5 h-5" />
                     <span>Dashboard</span>
@@ -51,7 +51,7 @@ const isActive = (path) => {
                 <Link
                     href="/member/classes"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300"
-                    :class="isActive('/member/classes') ? 'bg-[#FF6B35] text-[#111111] font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
+                    :class="isActive('/member/classes') ? 'bg-[#FF6B35] text-white font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
                 >
                     <Calendar class="w-5 h-5" />
                     <span>Classes</span>
@@ -60,7 +60,7 @@ const isActive = (path) => {
                 <Link
                     href="/member/workouts"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300"
-                    :class="isActive('/member/workouts') ? 'bg-[#FF6B35] text-[#111111] font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
+                    :class="isActive('/member/workouts') ? 'bg-[#FF6B35] text-white font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
                 >
                     <Dumbbell class="w-5 h-5" />
                     <span>Workouts</span>
@@ -69,7 +69,7 @@ const isActive = (path) => {
                 <Link
                     href="/member/profile"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300"
-                    :class="isActive('/member/profile') ? 'bg-[#FF6B35] text-[#111111] font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
+                    :class="isActive('/member/profile') ? 'bg-[#FF6B35] text-white font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]' : 'text-gms-text-secondary hover:bg-gms-surface-hover hover:text-gms-text'"
                 >
                     <User class="w-5 h-5" />
                     <span>Profile</span>
@@ -143,4 +143,5 @@ const isActive = (path) => {
     padding-bottom: env(safe-area-inset-bottom, 12px);
 }
 </style>
+
 

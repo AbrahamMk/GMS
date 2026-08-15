@@ -28,7 +28,7 @@ defineProps({
                     <p class="mt-3 max-w-xl text-base font-medium leading-relaxed text-gms-text-muted">Manage your branch trainers, bios, and scheduled slots.</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex flex-wrap gap-3">
-                    <Button class="bg-[#FF6B35] text-[#111111] hover:bg-[#e55a28] font-bold rounded-xl shadow-[0_4px_14px_rgba(184,245,0,0.3)] border-none transition-all hover:-translate-y-0.5 active:translate-y-0">+ Add Trainer</Button>
+                    <Button class="bg-[#FF6B35] text-white hover:bg-[#e55a28] font-bold rounded-xl shadow-[0_4px_14px_rgba(184,245,0,0.3)] border-none transition-all hover:-translate-y-0.5 active:translate-y-0">+ Add Trainer</Button>
                 </div>
             </div>
 
@@ -68,4 +68,5 @@ defineProps({
         </div>
     </AppLayout>
 </template>
+
 

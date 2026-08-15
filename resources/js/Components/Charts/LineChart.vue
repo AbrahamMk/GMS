@@ -26,3 +26,4 @@ const area = computed(() => `${padding},${height - padding} ${line.value} ${widt
         </svg>
     </div>
 </template>
+

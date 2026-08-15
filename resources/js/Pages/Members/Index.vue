@@ -43,10 +43,10 @@ const getStatusColor = (status) => {
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
             >
                 <div>
-                    <h1 class="text-3xl font-bold tracking-tight text-[#111111]">Members</h1>
+                    <h1 class="text-3xl font-bold tracking-tight text-gms-text">Members</h1>
                     <p class="text-gray-500 mt-1">Manage and view your gym members.</p>
                 </div>
-                <Button class="bg-[#FF6B35] text-[#111111] hover:bg-[#a3d900] font-semibold shadow-sm border border-[#9acc00]">
+                <Button class="bg-[#FF6B35] text-white hover:bg-[#a3d900] font-semibold shadow-sm border border-[#9acc00]">
                     Add New Member
                 </Button>
             </div>
@@ -65,7 +65,7 @@ const getStatusColor = (status) => {
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-gray-500">{{ stat.title }}</p>
-                                <h3 class="text-3xl font-bold text-[#111111] mt-2">{{ stat.value }}</h3>
+                                <h3 class="text-3xl font-bold text-gms-text mt-2">{{ stat.value }}</h3>
                             </div>
                             <div :class="`p-3 rounded-xl ${stat.bg}`">
                                 <component :is="stat.icon" :class="`w-6 h-6 ${stat.color}`" />
@@ -118,11 +118,11 @@ const getStatusColor = (status) => {
                             >
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[#111111] font-bold">
+                                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gms-text font-bold">
                                             {{ member.first_name.charAt(0) }}{{ member.last_name.charAt(0) }}
                                         </div>
                                         <div>
-                                            <p class="font-semibold text-[#111111] group-hover:text-[#8ac900] transition-colors">
+                                            <p class="font-semibold text-gms-text group-hover:text-[#8ac900] transition-colors">
                                                 {{ member.first_name }} {{ member.last_name }}
                                             </p>
                                             <p class="text-xs text-gray-500 font-medium">{{ member.member_code }}</p>
@@ -130,7 +130,7 @@ const getStatusColor = (status) => {
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <p class="text-[#111111]">{{ member.phone || '—' }}</p>
+                                    <p class="text-gms-text">{{ member.phone || '—' }}</p>
                                     <p class="text-xs text-gray-500">{{ member.email || '—' }}</p>
                                 </td>
                                 <td class="px-6 py-4">
@@ -140,7 +140,7 @@ const getStatusColor = (status) => {
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <Link :href="`/portal/members/${member.id}`">
-                                        <Button variant="ghost" size="sm" class="text-gray-400 hover:text-[#111111] hover:bg-gray-100">
+                                        <Button variant="ghost" size="sm" class="text-gray-400 hover:text-gms-text hover:bg-gray-100">
                                             View Details
                                             <ChevronRight class="w-4 h-4 ml-1" />
                                         </Button>
@@ -156,7 +156,7 @@ const getStatusColor = (status) => {
                 </div>
                 
                 <div class="p-4 border-t border-gray-100 bg-gray-50/30 flex items-center justify-between rounded-b-xl">
-                    <p class="text-xs text-gray-500">Showing <span class="font-medium text-[#111111]">{{ members.length }}</span> members</p>
+                    <p class="text-xs text-gray-500">Showing <span class="font-medium text-gms-text">{{ members.length }}</span> members</p>
                     <div class="flex gap-2">
                         <Button variant="outline" size="sm" disabled>Previous</Button>
                         <Button variant="outline" size="sm" disabled>Next</Button>
@@ -166,5 +166,6 @@ const getStatusColor = (status) => {
         </div>
     </AppLayout>
 </template>
+
 
 

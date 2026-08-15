@@ -109,7 +109,7 @@ const updateProfile = () => {
                         <button
                             type="submit"
                             :disabled="profileForm.processing"
-                            class="w-full inline-flex items-center justify-center gap-2 bg-[#FF6B35] text-[#111111] font-black rounded-xl py-3.5 hover:bg-[#e55a28] transition-all shadow-[0_4px_14px_rgba(184,245,0,0.25)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60"
+                            class="w-full inline-flex items-center justify-center gap-2 bg-[#FF6B35] text-white font-black rounded-xl py-3.5 hover:bg-[#e55a28] transition-all shadow-[0_4px_14px_rgba(184,245,0,0.25)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60"
                         >
                             <Save class="h-4 w-4" />
                             {{ profileForm.processing ? 'Saving changes…' : 'Save Profile Changes' }}
@@ -120,4 +120,5 @@ const updateProfile = () => {
         </div>
     </MemberLayout>
 </template>
+
 

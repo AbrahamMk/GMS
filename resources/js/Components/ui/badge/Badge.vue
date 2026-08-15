@@ -19,3 +19,4 @@ const classes = computed(() => cn(badgeVariants({ variant: props.variant }), pro
 </script>
 
 <template><span :class="classes"><slot /></span></template>
+

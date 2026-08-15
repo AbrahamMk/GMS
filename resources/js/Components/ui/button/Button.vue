@@ -39,3 +39,4 @@ const classes = computed(() => cn(buttonVariants({ variant: props.variant, size:
         <slot />
     </component>
 </template>
+

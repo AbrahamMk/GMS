@@ -40,8 +40,8 @@ const formatTime = (dateStr) => {
                 :initial="{ opacity: 0, y: -15 }"
                 :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 250, damping: 25 } }"
             >
-                <h1 class="text-3xl font-black tracking-tight text-[#111111]">Attendance</h1>
-                <p class="text-[#8A8A8A] mt-1 font-medium">Check members in and out. View live session activity.</p>
+                <h1 class="text-3xl font-black tracking-tight text-gms-text">Attendance</h1>
+                <p class="text-gms-text-muted mt-1 font-medium">Check members in and out. View live session activity.</p>
             </div>
 
             <!-- KPI Row -->
@@ -61,23 +61,23 @@ const formatTime = (dateStr) => {
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 25, delay: 80 } }"
-                    class="group relative overflow-hidden rounded-3xl bg-white border border-[#E5E5E5] p-6 shadow-sm hover:border-[#FF6B35] transition-all"
+                    class="group relative overflow-hidden rounded-3xl bg-white border border-gms-border p-6 shadow-sm hover:border-[#FF6B35] transition-all"
                 >
                     <div class="absolute top-0 left-0 h-1 w-0 bg-[#FF6B35] transition-all duration-300 group-hover:w-full"></div>
-                    <Clock class="h-5 w-5 text-[#8A8A8A] mb-3" />
-                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A8A8A]">Open Sessions</p>
-                    <div class="mt-2 text-4xl font-black text-[#111111]">{{ summary.openSessions ?? 0 }}</div>
+                    <Clock class="h-5 w-5 text-gms-text-muted mb-3" />
+                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted">Open Sessions</p>
+                    <div class="mt-2 text-4xl font-black text-gms-text">{{ summary.openSessions ?? 0 }}</div>
                 </div>
                 <div
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 25, delay: 160 } }"
-                    class="group relative overflow-hidden rounded-3xl bg-white border border-[#E5E5E5] p-6 shadow-sm hover:border-[#FF6B35] transition-all"
+                    class="group relative overflow-hidden rounded-3xl bg-white border border-gms-border p-6 shadow-sm hover:border-[#FF6B35] transition-all"
                 >
                     <div class="absolute top-0 left-0 h-1 w-0 bg-[#FF6B35] transition-all duration-300 group-hover:w-full"></div>
-                    <Users class="h-5 w-5 text-[#8A8A8A] mb-3" />
-                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A8A8A]">On Floor Now</p>
-                    <div class="mt-2 text-4xl font-black text-[#111111]">{{ summary.openSessions ?? 0 }}</div>
+                    <Users class="h-5 w-5 text-gms-text-muted mb-3" />
+                    <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted">On Floor Now</p>
+                    <div class="mt-2 text-4xl font-black text-gms-text">{{ summary.openSessions ?? 0 }}</div>
                 </div>
             </div>
 
@@ -87,21 +87,21 @@ const formatTime = (dateStr) => {
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 250, damping: 25, delay: 100 } }"
-                    class="xl:col-span-5 rounded-3xl border border-[#E5E5E5] bg-white shadow-sm overflow-hidden"
+                    class="xl:col-span-5 rounded-3xl border border-gms-border bg-white shadow-sm overflow-hidden"
                 >
                     <!-- Tabs -->
-                    <div class="flex border-b border-[#E5E5E5]">
+                    <div class="flex border-b border-gms-border">
                         <button
                             @click="activeTab = 'checkin'"
                             class="flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all"
-                            :class="activeTab === 'checkin' ? 'text-[#111111] border-b-2 border-[#FF6B35] bg-[#fafafa]' : 'text-[#8A8A8A] hover:text-[#111111]'"
+                            :class="activeTab === 'checkin' ? 'text-gms-text border-b-2 border-[#FF6B35] bg-[#fafafa]' : 'text-gms-text-muted hover:text-gms-text'"
                         >
                             <UserCheck class="h-4 w-4" /> Check-in
                         </button>
                         <button
                             @click="activeTab = 'checkout'"
                             class="flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all"
-                            :class="activeTab === 'checkout' ? 'text-[#111111] border-b-2 border-[#FF6B35] bg-[#fafafa]' : 'text-[#8A8A8A] hover:text-[#111111]'"
+                            :class="activeTab === 'checkout' ? 'text-gms-text border-b-2 border-[#FF6B35] bg-[#fafafa]' : 'text-gms-text-muted hover:text-gms-text'"
                         >
                             <LogOut class="h-4 w-4" /> Check-out
                         </button>
@@ -118,29 +118,29 @@ const formatTime = (dateStr) => {
                         </div>
                         <form @submit.prevent="checkIn" class="space-y-3">
                             <div>
-                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A8A8A] mb-1.5 block">Member ID</label>
+                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted mb-1.5 block">Member ID</label>
                                 <input
                                     v-model="checkInForm.member_id"
                                     type="number"
                                     placeholder="Enter member ID"
-                                    class="w-full rounded-xl border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-[#111111] font-semibold focus:outline-none focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 transition"
+                                    class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-3 text-gms-text font-semibold focus:outline-none focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 transition"
                                 />
                                 <p v-if="checkInForm.errors.member_id" class="text-xs font-medium text-[#e11d48] mt-1">{{ checkInForm.errors.member_id }}</p>
                             </div>
                             <div>
-                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A8A8A] mb-1.5 block">QR Token <span class="text-[#5a5a5a] normal-case">(optional)</span></label>
+                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted mb-1.5 block">QR Token <span class="text-[#5a5a5a] normal-case">(optional)</span></label>
                                 <input
                                     v-model="checkInForm.qr_token"
                                     type="text"
                                     placeholder="Scan or paste QR token"
-                                    class="w-full rounded-xl border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-[#111111] font-semibold focus:outline-none focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 transition"
+                                    class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-3 text-gms-text font-semibold focus:outline-none focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 transition"
                                 />
                             </div>
                             <div>
-                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A8A8A] mb-1.5 block">Method</label>
+                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted mb-1.5 block">Method</label>
                                 <select
                                     v-model="checkInForm.check_in_method"
-                                    class="w-full rounded-xl border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-[#111111] font-semibold focus:outline-none focus:border-[#FF6B35] transition"
+                                    class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-3 text-gms-text font-semibold focus:outline-none focus:border-[#FF6B35] transition"
                                 >
                                     <option value="qr">QR Scan</option>
                                     <option value="manual">Manual Entry</option>
@@ -150,7 +150,7 @@ const formatTime = (dateStr) => {
                             <button
                                 type="submit"
                                 :disabled="checkInForm.processing"
-                                class="w-full bg-[#FF6B35] text-[#111111] font-black rounded-xl py-3.5 hover:bg-[#e55a28] transition-all shadow-[0_4px_14px_rgba(184,245,0,0.25)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60"
+                                class="w-full bg-[#FF6B35] text-white font-black rounded-xl py-3.5 hover:bg-[#e55a28] transition-all shadow-[0_4px_14px_rgba(184,245,0,0.25)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60"
                             >
                                 {{ checkInForm.processing ? 'Processing…' : 'Check In Member' }}
                             </button>
@@ -161,19 +161,19 @@ const formatTime = (dateStr) => {
                     <div v-if="activeTab === 'checkout'" class="p-6 space-y-4">
                         <form @submit.prevent="checkOut" class="space-y-3">
                             <div>
-                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A8A8A] mb-1.5 block">Session ID</label>
+                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted mb-1.5 block">Session ID</label>
                                 <input
                                     v-model="checkOutForm.attendance_session_id"
                                     type="number"
                                     placeholder="Enter attendance session ID"
-                                    class="w-full rounded-xl border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-[#111111] font-semibold focus:outline-none focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 transition"
+                                    class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-3 text-gms-text font-semibold focus:outline-none focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 transition"
                                 />
                             </div>
                             <div>
-                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A8A8A] mb-1.5 block">Method</label>
+                                <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-gms-text-muted mb-1.5 block">Method</label>
                                 <select
                                     v-model="checkOutForm.check_out_method"
-                                    class="w-full rounded-xl border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-[#111111] font-semibold focus:outline-none focus:border-[#FF6B35] transition"
+                                    class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-3 text-gms-text font-semibold focus:outline-none focus:border-[#FF6B35] transition"
                                 >
                                     <option value="qr">QR Scan</option>
                                     <option value="manual">Manual Entry</option>
@@ -196,25 +196,25 @@ const formatTime = (dateStr) => {
                     v-motion
                     :initial="{ opacity: 0, x: 20 }"
                     :enter="{ opacity: 1, x: 0, transition: { type: 'spring', stiffness: 250, damping: 25, delay: 150 } }"
-                    class="xl:col-span-7 rounded-3xl border border-[#E5E5E5] bg-white shadow-sm"
+                    class="xl:col-span-7 rounded-3xl border border-gms-border bg-white shadow-sm"
                 >
-                    <div class="flex items-center justify-between px-6 py-5 border-b border-[#E5E5E5]">
+                    <div class="flex items-center justify-between px-6 py-5 border-b border-gms-border">
                         <div>
                             <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#FF6B35] bg-[#111111] inline-block px-2 py-0.5 rounded mb-2">Live</p>
-                            <h2 class="text-xl font-black text-[#111111]">Recent Sessions</h2>
+                            <h2 class="text-xl font-black text-gms-text">Recent Sessions</h2>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="relative flex h-2 w-2">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B35] opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B35]"></span>
                             </span>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">Live</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gms-text-muted">Live</span>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
-                                <tr class="bg-[#F5F5F5] text-[11px] font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
+                                <tr class="bg-gms-bg text-[11px] font-bold uppercase tracking-[0.15em] text-gms-text-muted">
                                     <th class="px-6 py-3 text-left">Member</th>
                                     <th class="px-6 py-3 text-left">Check-in</th>
                                     <th class="px-6 py-3 text-left">Check-out</th>
@@ -232,21 +232,21 @@ const formatTime = (dateStr) => {
                                 >
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="h-8 w-8 rounded-full bg-[#F5F5F5] flex items-center justify-center text-xs font-black text-[#111111]">
+                                            <div class="h-8 w-8 rounded-full bg-gms-bg flex items-center justify-center text-xs font-black text-gms-text">
                                                 {{ session.member?.first_name?.charAt(0) ?? '?' }}{{ session.member?.last_name?.charAt(0) ?? '' }}
                                             </div>
                                             <div>
-                                                <p class="font-bold text-[#111111]">{{ session.member?.first_name }} {{ session.member?.last_name }}</p>
-                                                <p class="text-[10px] font-bold uppercase tracking-wider text-[#8A8A8A]">{{ session.member?.member_code }}</p>
+                                                <p class="font-medium text-gms-text">{{ session.member?.first_name }} {{ session.member?.last_name }}</p>
+                                                <p class="text-[10px] font-bold uppercase tracking-wider text-gms-text-muted">{{ session.member?.member_code }}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 font-semibold text-[#111111]">{{ formatTime(session.checked_in_at) }}</td>
-                                    <td class="px-6 py-4 font-semibold text-[#8A8A8A]">{{ formatTime(session.checked_out_at) }}</td>
+                                    <td class="px-6 py-4 font-semibold text-gms-text">{{ formatTime(session.checked_in_at) }}</td>
+                                    <td class="px-6 py-4 font-semibold text-gms-text-muted">{{ formatTime(session.checked_out_at) }}</td>
                                     <td class="px-6 py-4">
                                         <span
                                             class="inline-flex items-center gap-1.5 rounded-full text-[10px] font-bold uppercase tracking-wide px-2.5 py-1"
-                                            :class="session.status === 'open' ? 'bg-[#d1fae5] text-[#059669]' : 'bg-[#F5F5F5] text-[#8A8A8A]'"
+                                            :class="session.status === 'open' ? 'bg-[#d1fae5] text-[#059669]' : 'bg-gms-bg text-gms-text-muted'"
                                         >
                                             <CheckCircle2 class="h-3 w-3" />
                                             {{ session.status }}
@@ -254,7 +254,7 @@ const formatTime = (dateStr) => {
                                     </td>
                                 </tr>
                                 <tr v-if="!recentSessions.length">
-                                    <td colspan="4" class="px-6 py-12 text-center text-[#8A8A8A] font-medium">No attendance activity yet today.</td>
+                                    <td colspan="4" class="px-6 py-12 text-center text-gms-text-muted font-medium">No attendance activity yet today.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -264,5 +264,6 @@ const formatTime = (dateStr) => {
         </div>
     </AppLayout>
 </template>
+
 
 

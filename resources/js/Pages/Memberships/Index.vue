@@ -78,10 +78,10 @@ const formatCurrency = (amount, currency) => {
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
             >
                 <div>
-                    <h1 class="text-3xl font-bold tracking-tight text-[#111111]">Membership Plans</h1>
+                    <h1 class="text-3xl font-bold tracking-tight text-gms-text">Membership Plans</h1>
                     <p class="text-gray-500 mt-1">Manage plans and view active subscriptions.</p>
                 </div>
-                <Button @click="openForm()" class="bg-[#FF6B35] text-[#111111] hover:bg-[#a3d900] font-semibold shadow-sm border border-[#9acc00]">
+                <Button @click="openForm()" class="bg-[#FF6B35] text-white hover:bg-[#a3d900] font-semibold shadow-sm border border-[#9acc00]">
                     <Plus class="w-4 h-4 mr-2" />
                     Create New Plan
                 </Button>
@@ -95,8 +95,8 @@ const formatCurrency = (amount, currency) => {
                     :enter="{ opacity: 1, scale: 1, transition: { duration: 200 } }"
                     class="w-full max-w-lg border-gray-100 shadow-xl"
                 >
-                    <div class="px-6 py-4 border-b border-[#E5E5E5] bg-[#F5F5F5]">
-                        <h3 class="font-black text-[#111111]">
+                    <div class="px-6 py-4 border-b border-gms-border bg-gms-bg">
+                        <h3 class="font-black text-gms-text">
                             {{ editingPlan ? 'Edit Membership Plan' : 'Create Membership Plan' }}
                         </h3>
                         <CardDescription>
@@ -145,7 +145,7 @@ const formatCurrency = (amount, currency) => {
                     </div>
                     <CardFooter class="flex justify-end gap-2 border-t border-gray-100 pt-4 bg-gray-50/50 rounded-b-xl">
                         <Button variant="outline" @click="closeForm">Cancel</Button>
-                        <Button @click="submitForm" class="bg-[#FF6B35] text-[#111111] hover:bg-[#a3d900]">Save Plan</Button>
+                        <Button @click="submitForm" class="bg-[#FF6B35] text-white hover:bg-[#a3d900]">Save Plan</Button>
                     </CardFooter>
                 </div>
             </div>
@@ -153,7 +153,7 @@ const formatCurrency = (amount, currency) => {
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 <!-- Plans List -->
                 <div class="xl:col-span-2 space-y-6">
-                    <h2 class="text-xl font-bold text-[#111111] flex items-center gap-2">
+                    <h2 class="text-xl font-bold text-gms-text flex items-center gap-2">
                         <CheckCircle2 class="w-5 h-5 text-[#FF6B35]" />
                         Available Plans
                     </h2>
@@ -169,7 +169,7 @@ const formatCurrency = (amount, currency) => {
                         >
                             <div class="absolute top-0 right-0 w-24 h-24 bg-[#FF6B35]/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             
-                            <div class="px-6 py-4 border-b border-[#E5E5E5] bg-[#F5F5F5]">
+                            <div class="px-6 py-4 border-b border-gms-border bg-gms-bg">
                                 <div class="flex justify-between items-start">
                                     <Badge variant="outline" class="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-600 border-gray-200">
                                         {{ plan.type }}
@@ -183,13 +183,13 @@ const formatCurrency = (amount, currency) => {
                                         </button>
                                     </div>
                                 </div>
-                                <h3 class="font-black text-[#111111]">{{ plan.name }}</h3>
+                                <h3 class="font-black text-gms-text">{{ plan.name }}</h3>
                                 <p class="text-sm font-medium text-gray-400">{{ plan.code }}</p>
                             </div>
                             
                             <div>
                                 <div class="my-4">
-                                    <span class="text-4xl font-extrabold text-[#111111]">{{ formatCurrency(plan.price, plan.currency) }}</span>
+                                    <span class="text-4xl font-extrabold text-gms-text">{{ formatCurrency(plan.price, plan.currency) }}</span>
                                     <span v-if="plan.duration_days" class="text-gray-500 font-medium"> / {{ plan.duration_days }} days</span>
                                 </div>
                                 
@@ -210,7 +210,7 @@ const formatCurrency = (amount, currency) => {
 
                 <!-- Active Memberships -->
                 <div class="xl:col-span-1 space-y-6">
-                    <h2 class="text-xl font-bold text-[#111111] flex items-center gap-2">
+                    <h2 class="text-xl font-bold text-gms-text flex items-center gap-2">
                         <Users class="w-5 h-5 text-[#FF6B35]" />
                         Recent Memberships
                     </h2>
@@ -228,11 +228,11 @@ const formatCurrency = (amount, currency) => {
                                     :key="membership.id"
                                     class="p-4 hover:bg-gray-50/50 transition-colors flex items-center gap-4"
                                 >
-                                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[#111111] font-bold text-sm shrink-0">
+                                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gms-text font-bold text-sm shrink-0">
                                         {{ membership.member?.first_name?.charAt(0) }}{{ membership.member?.last_name?.charAt(0) }}
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="font-bold text-[#111111] truncate">
+                                        <p class="font-bold text-gms-text truncate">
                                             {{ membership.member?.first_name }} {{ membership.member?.last_name }}
                                         </p>
                                         <div class="flex items-center text-xs text-gray-500 mt-0.5 gap-2">
@@ -259,5 +259,6 @@ const formatCurrency = (amount, currency) => {
         </div>
     </AppLayout>
 </template>
+
 
 

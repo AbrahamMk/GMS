@@ -41,7 +41,7 @@ const mockClasses = [
                 
                 <!-- Date scroller -->
                 <div class="flex gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide snap-x" v-motion-fade-visible>
-                    <div class="min-w-[70px] bg-[#FF6B35] text-[#111111] rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer shadow-[0_0_15px_rgba(184,245,0,0.2)]">
+                    <div class="min-w-[70px] bg-[#FF6B35] text-white rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer shadow-[0_0_15px_rgba(184,245,0,0.2)]">
                         <span class="text-xs font-bold uppercase">Today</span>
                         <span class="text-xl font-black">14</span>
                     </div>
@@ -124,4 +124,5 @@ const mockClasses = [
     scrollbar-width: none;
 }
 </style>
+
 

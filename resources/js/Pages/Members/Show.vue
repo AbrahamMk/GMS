@@ -13,9 +13,9 @@ const props = defineProps({
 const getStatusBg = (status) => {
     switch (status?.toLowerCase()) {
         case 'active': return 'bg-[#d1fae5] text-[#059669]';
-        case 'inactive': return 'bg-[#F5F5F5] text-[#8A8A8A]';
+        case 'inactive': return 'bg-gms-bg text-gms-text-muted';
         case 'suspended': return 'bg-[#ffe4e6] text-[#e11d48]';
-        default: return 'bg-[#F5F5F5] text-[#8A8A8A]';
+        default: return 'bg-gms-bg text-gms-text-muted';
     }
 };
 
@@ -40,12 +40,12 @@ const formatTime = (d) => {
                 :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 250, damping: 25 } }"
                 class="flex items-center justify-between"
             >
-                <Link href="/portal/members" class="text-sm font-bold text-[#8A8A8A] hover:text-[#111111] flex items-center gap-2 transition-colors">
+                <Link href="/portal/members" class="text-sm font-bold text-gms-text-muted hover:text-gms-text flex items-center gap-2 transition-colors">
                     <ArrowLeft class="w-4 h-4" /> Back to Members
                 </Link>
                 <div class="flex gap-2">
-                    <Button variant="outline" class="border-[#E5E5E5] text-[#111111] font-bold">Edit Profile</Button>
-                    <Button class="bg-[#FF6B35] text-[#111111] hover:bg-[#e55a28] font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]">Renew Membership</Button>
+                    <Button variant="outline" class="border-gms-border text-gms-text font-bold">Edit Profile</Button>
+                    <Button class="bg-[#FF6B35] text-white hover:bg-[#e55a28] font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]">Renew Membership</Button>
                 </div>
             </div>
 
@@ -56,29 +56,29 @@ const formatTime = (d) => {
                         v-motion
                         :initial="{ opacity: 0, scale: 0.97 }"
                         :enter="{ opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 250, damping: 25, delay: 100 } }"
-                        class="rounded-3xl border border-[#E5E5E5] bg-white shadow-sm overflow-hidden"
+                        class="rounded-3xl border border-gms-border bg-white shadow-sm overflow-hidden"
                     >
                         <div class="h-24 bg-[#111111] relative">
-                            <div class="absolute -bottom-10 left-6 w-20 h-20 rounded-full border-4 border-white bg-[#F5F5F5] flex items-center justify-center text-2xl font-black text-[#111111] shadow">
+                            <div class="absolute -bottom-10 left-6 w-20 h-20 rounded-full border-4 border-white bg-gms-bg flex items-center justify-center text-2xl font-black text-gms-text shadow">
                                 {{ member.first_name?.charAt(0) }}{{ member.last_name?.charAt(0) }}
                             </div>
                         </div>
                         <div class="px-6 pb-6 pt-14">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h2 class="text-xl font-black text-[#111111]">{{ member.first_name }} {{ member.last_name }}</h2>
-                                    <p class="text-[11px] font-bold uppercase tracking-widest text-[#8A8A8A] mt-0.5">{{ member.member_code }}</p>
+                                    <h2 class="text-xl font-black text-gms-text">{{ member.first_name }} {{ member.last_name }}</h2>
+                                    <p class="text-[11px] font-bold uppercase tracking-widest text-gms-text-muted mt-0.5">{{ member.member_code }}</p>
                                 </div>
                                 <span class="inline-flex items-center rounded-full text-[10px] font-black uppercase tracking-wide px-2.5 py-1" :class="getStatusBg(member.status)">
                                     {{ member.status }}
                                 </span>
                             </div>
                             <div class="mt-6 space-y-3">
-                                <div class="flex items-center gap-3 text-sm text-[#8A8A8A]"><Phone class="w-4 h-4 shrink-0" /><span class="font-medium">{{ member.phone || 'No phone' }}</span></div>
-                                <div class="flex items-center gap-3 text-sm text-[#8A8A8A]"><Mail class="w-4 h-4 shrink-0" /><span class="font-medium">{{ member.email || 'No email' }}</span></div>
-                                <div class="flex items-start gap-3 text-sm text-[#8A8A8A]"><MapPin class="w-4 h-4 shrink-0 mt-0.5" /><span class="font-medium">{{ member.address || 'No address' }}</span></div>
-                                <div class="flex items-center gap-3 text-sm text-[#8A8A8A]"><User class="w-4 h-4 shrink-0" /><span class="font-medium">{{ member.gender || 'Not specified' }} · Born {{ formatDate(member.date_of_birth) }}</span></div>
-                                <div class="flex items-center gap-3 text-sm text-[#8A8A8A] pt-3 border-t border-[#F5F5F5] mt-3"><Calendar class="w-4 h-4 shrink-0" /><span class="font-medium">Joined {{ formatDate(member.created_at) }}</span></div>
+                                <div class="flex items-center gap-3 text-sm text-gms-text-muted"><Phone class="w-4 h-4 shrink-0" /><span class="font-medium">{{ member.phone || 'No phone' }}</span></div>
+                                <div class="flex items-center gap-3 text-sm text-gms-text-muted"><Mail class="w-4 h-4 shrink-0" /><span class="font-medium">{{ member.email || 'No email' }}</span></div>
+                                <div class="flex items-start gap-3 text-sm text-gms-text-muted"><MapPin class="w-4 h-4 shrink-0 mt-0.5" /><span class="font-medium">{{ member.address || 'No address' }}</span></div>
+                                <div class="flex items-center gap-3 text-sm text-gms-text-muted"><User class="w-4 h-4 shrink-0" /><span class="font-medium">{{ member.gender || 'Not specified' }} · Born {{ formatDate(member.date_of_birth) }}</span></div>
+                                <div class="flex items-center gap-3 text-sm text-gms-text-muted pt-3 border-t border-[#F5F5F5] mt-3"><Calendar class="w-4 h-4 shrink-0" /><span class="font-medium">Joined {{ formatDate(member.created_at) }}</span></div>
                             </div>
                         </div>
                     </div>
@@ -91,18 +91,18 @@ const formatTime = (d) => {
                         v-motion
                         :initial="{ opacity: 0, y: 20 }"
                         :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 250, damping: 25, delay: 200 } }"
-                        class="rounded-3xl border border-[#E5E5E5] bg-white shadow-sm overflow-hidden"
+                        class="rounded-3xl border border-gms-border bg-white shadow-sm overflow-hidden"
                     >
-                        <div class="flex items-center gap-2 px-6 py-4 border-b border-[#E5E5E5] bg-[#F5F5F5]">
-                            <CreditCard class="w-5 h-5 text-[#8A8A8A]" />
-                            <h3 class="font-black text-[#111111]">Active &amp; Past Memberships</h3>
+                        <div class="flex items-center gap-2 px-6 py-4 border-b border-gms-border bg-gms-bg">
+                            <CreditCard class="w-5 h-5 text-gms-text-muted" />
+                            <h3 class="font-black text-gms-text">Active &amp; Past Memberships</h3>
                         </div>
                         <div v-if="memberships.length > 0" class="divide-y divide-[#F5F5F5]">
                             <div v-for="m in memberships" :key="m.id" class="p-5 hover:bg-[#FAFAFA] transition-colors">
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                                     <div>
-                                        <h4 class="font-black text-[#111111]">{{ m.plan_name }}</h4>
-                                        <div class="flex flex-wrap items-center gap-4 mt-1.5 text-sm text-[#8A8A8A] font-medium">
+                                        <h4 class="font-black text-gms-text">{{ m.plan_name }}</h4>
+                                        <div class="flex flex-wrap items-center gap-4 mt-1.5 text-sm text-gms-text-muted font-medium">
                                             <div class="flex items-center gap-1.5"><Calendar class="w-3.5 h-3.5" /><span>{{ formatDate(m.starts_at) }} – {{ formatDate(m.ends_at) }}</span></div>
                                             <div v-if="m.remaining_visits !== null" class="flex items-center gap-1.5"><Activity class="w-3.5 h-3.5" /><span>{{ m.remaining_visits }} visits left</span></div>
                                         </div>
@@ -111,7 +111,7 @@ const formatTime = (d) => {
                                 </div>
                             </div>
                         </div>
-                        <div v-else class="p-8 text-center text-[#8A8A8A] font-medium">No membership history found.</div>
+                        <div v-else class="p-8 text-center text-gms-text-muted font-medium">No membership history found.</div>
                     </div>
 
                     <!-- Attendance -->
@@ -119,15 +119,15 @@ const formatTime = (d) => {
                         v-motion
                         :initial="{ opacity: 0, y: 20 }"
                         :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 250, damping: 25, delay: 300 } }"
-                        class="rounded-3xl border border-[#E5E5E5] bg-white shadow-sm overflow-hidden"
+                        class="rounded-3xl border border-gms-border bg-white shadow-sm overflow-hidden"
                     >
-                        <div class="flex items-center gap-2 px-6 py-4 border-b border-[#E5E5E5] bg-[#F5F5F5]">
-                            <Clock class="w-5 h-5 text-[#8A8A8A]" />
-                            <h3 class="font-black text-[#111111]">Recent Attendance</h3>
+                        <div class="flex items-center gap-2 px-6 py-4 border-b border-gms-border bg-gms-bg">
+                            <Clock class="w-5 h-5 text-gms-text-muted" />
+                            <h3 class="font-black text-gms-text">Recent Attendance</h3>
                         </div>
                         <div v-if="attendances.length > 0" class="overflow-x-auto">
                             <table class="w-full text-sm">
-                                <thead class="bg-[#F5F5F5] text-[11px] font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
+                                <thead class="bg-gms-bg text-[11px] font-bold uppercase tracking-[0.15em] text-gms-text-muted">
                                     <tr>
                                         <th class="px-6 py-3 text-left">Date</th>
                                         <th class="px-6 py-3 text-left">Check In</th>
@@ -137,9 +137,9 @@ const formatTime = (d) => {
                                 </thead>
                                 <tbody class="divide-y divide-[#F5F5F5]">
                                     <tr v-for="a in attendances" :key="a.id" class="hover:bg-[#FAFAFA] transition-colors">
-                                        <td class="px-6 py-3 font-bold text-[#111111]">{{ formatDate(a.checked_in_at) }}</td>
-                                        <td class="px-6 py-3 text-[#8A8A8A] font-medium">{{ formatTime(a.checked_in_at) }}</td>
-                                        <td class="px-6 py-3 text-[#8A8A8A] font-medium">{{ a.checked_out_at ? formatTime(a.checked_out_at) : '—' }}</td>
+                                        <td class="px-6 py-3 font-medium text-gms-text">{{ formatDate(a.checked_in_at) }}</td>
+                                        <td class="px-6 py-3 text-gms-text-muted font-medium">{{ formatTime(a.checked_in_at) }}</td>
+                                        <td class="px-6 py-3 text-gms-text-muted font-medium">{{ a.checked_out_at ? formatTime(a.checked_out_at) : '—' }}</td>
                                         <td class="px-6 py-3">
                                             <span class="inline-flex items-center gap-1.5 rounded-full bg-[#d1fae5] text-[#059669] text-[10px] font-bold uppercase tracking-wide px-2.5 py-1">
                                                 <CheckCircle2 class="h-3 w-3" /> {{ a.status }}
@@ -149,11 +149,12 @@ const formatTime = (d) => {
                                 </tbody>
                             </table>
                         </div>
-                        <div v-else class="p-8 text-center text-[#8A8A8A] font-medium">No attendance records found.</div>
+                        <div v-else class="p-8 text-center text-gms-text-muted font-medium">No attendance records found.</div>
                     </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
+
 

@@ -31,3 +31,4 @@ const max = computed(() => Math.max(...props.values, 1));
         </div>
     </div>
 </template>
+

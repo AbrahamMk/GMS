@@ -30,12 +30,10 @@ const mainNav = [
     { name: 'Memberships', href: '/portal/memberships', icon: WalletCards },
     { name: 'Classes', href: '/portal/classes', icon: CalendarDays },
     { name: 'Trainers', href: '/portal/trainers', icon: UserCog },
-];
-
-const secondaryNav = [
+    { name: 'Finance & Analytics', href: '/portal/finance', icon: BarChart3 },
     { name: 'Payments', href: '/portal/payments', icon: CreditCard },
     { name: 'Workouts', href: '/portal/workouts', icon: Dumbbell },
-    { name: 'Reports', href: '/portal/reports', icon: BarChart3 },
+    { name: 'Report', href: '/portal/reports', icon: BarChart3 },
 ];
 
 const isActive = (href) => {
@@ -61,7 +59,7 @@ const flashError = computed(() => page.props.flash?.error ?? null);
                             <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-gms-text-muted">Gym management</p>
                             <div class="mt-1 flex flex-wrap items-center gap-3">
                                 <h1 class="text-xl font-black tracking-tight text-gms-text">Admin Portal</h1>
-                                <Badge v-if="branch" class="bg-[#FF6B35] text-[#111111] hover:bg-[#e55a28] border-none font-bold">{{ branch.name }}</Badge>
+                                <Badge v-if="branch" class="bg-[#FF6B35] text-white hover:bg-[#e55a28] border-none font-bold">{{ branch.name }}</Badge>
                             </div>
                         </div>
                     </div>
@@ -70,7 +68,7 @@ const flashError = computed(() => page.props.flash?.error ?? null);
                         <ThemeToggle />
                         <div class="rounded-2xl border border-gms-border bg-gms-surface px-4 py-2 shadow-sm">
                             <p class="text-[10px] uppercase tracking-[0.2em] text-gms-text-muted">Signed in</p>
-                            <p class="font-bold text-gms-text">{{ authUser?.name ?? 'Guest' }}</p>
+                            <p class="font-medium text-gms-text">{{ authUser?.name ?? 'Guest' }}</p>
                         </div>
                         <button
                             type="button"
@@ -100,32 +98,19 @@ const flashError = computed(() => page.props.flash?.error ?? null);
 
             <div class="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-6">
                 <!-- Sidebar -->
-                <nav class="mb-5 flex gap-2 overflow-x-auto pb-1 lg:sticky lg:top-6 lg:mb-0 lg:h-fit lg:flex-col lg:overflow-visible lg:rounded-2xl lg:border lg:border-[#242424] lg:bg-[#111111] lg:p-4 lg:shadow-xl">
-                    <p class="hidden px-3 pt-1 mb-2 text-[9px] font-bold uppercase tracking-[0.3em] text-[#5a5a5a] lg:block">Operations</p>
+                <nav class="mb-5 flex gap-2 overflow-x-auto pb-1 lg:sticky lg:top-6 lg:mb-0 lg:h-fit lg:flex-col lg:overflow-visible lg:rounded-2xl lg:border lg:border-gms-border lg:bg-gms-surface lg:p-4 lg:shadow-xl">
                     <Link
                         v-for="item in mainNav"
                         :key="item.name"
                         :href="item.href"
-                        class="shrink-0 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-150 lg:w-full"
-                        :class="isActive(item.href) ? 'bg-[#FF6B35] text-[#111111] shadow-[0_4px_14px_rgba(255,107,53,0.25)]' : 'text-[#8A8A8A] hover:bg-[#242424] hover:text-white'"
+                        class="shrink-0 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-150 lg:w-full"
+                        :class="isActive(item.href) ? 'bg-[#FF6B35] text-white shadow-[0_4px_14px_rgba(255,107,53,0.25)]' : 'text-gms-text-muted hover:bg-gms-bg hover:text-gms-text'"
                     >
                         <component :is="item.icon" class="h-[17px] w-[17px] shrink-0" :stroke-width="2.5" />
                         {{ item.name }}
                     </Link>
 
-                    <p class="hidden mt-4 px-3 pt-3 mb-1 text-[9px] font-bold uppercase tracking-[0.3em] text-[#5a5a5a] border-t border-[#242424] lg:block">Finance &amp; Analytics</p>
-                    <Link
-                        v-for="item in secondaryNav"
-                        :key="item.name"
-                        :href="item.href"
-                        class="shrink-0 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-150 lg:w-full"
-                        :class="isActive(item.href) ? 'bg-[#FF6B35] text-[#111111] shadow-[0_4px_14px_rgba(255,107,53,0.25)]' : 'text-[#8A8A8A] hover:bg-[#242424] hover:text-white'"
-                    >
-                        <component :is="item.icon" class="h-[17px] w-[17px] shrink-0" :stroke-width="2.5" />
-                        {{ item.name }}
-                    </Link>
-
-                    <div class="mt-4 hidden border-t border-[#242424] px-3 pt-4 lg:block">
+                    <div class="mt-4 hidden border-t border-gms-border px-3 pt-4 lg:block">
                         <div class="flex items-center gap-2">
                             <span class="relative flex h-2 w-2">
                               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B35] opacity-75"></span>
@@ -144,4 +129,5 @@ const flashError = computed(() => page.props.flash?.error ?? null);
         </div>
     </div>
 </template>
+
 
