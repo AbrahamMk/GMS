@@ -28,7 +28,7 @@ Route::get('/', function () {
         'name' => $p->name,
         'price' => '$' . number_format($p->price, 0),
         'popular' => str_contains(strtolower($p->name), 'premium'),
-        'features' => array_filter(array_map('trim', explode("\n", $p->features ?? ''))),
+        'features' => array_filter(array_map('trim', explode("\n", $p->description ?? ''))),
     ]);
 
     $dbSchedule = \App\Models\ClassSession::withoutGlobalScope(\App\Scopes\BranchScope::class)

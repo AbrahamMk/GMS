@@ -163,47 +163,51 @@ const formatCurrency = (amount, currency) => {
                             v-for="(plan, index) in plans" 
                             :key="plan.id"
                             v-motion
-                            :initial="{ opacity: 0, y: 20 }"
-                            :enter="{ opacity: 1, y: 0, transition: { duration: 400, delay: index * 100 } }"
-                            class="border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+                            :initial="{ opacity: 0, y: 30 }"
+                            :visible="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 350, damping: 28, delay: index * 100 } }"
+                            class="relative flex flex-col p-8 border transition duration-300 rounded-3xl"
+                            :class="plan.name.toLowerCase().includes('premium')
+                                ? 'border-[#FF6B35] bg-[#FF6B35]/5 shadow-[0_0_40px_rgba(255,85,0,0.12)]'
+                                : 'border-gms-border bg-gms-surface hover:border-gms-text/20'"
                         >
-                            <div class="absolute top-0 right-0 w-24 h-24 bg-[#FF6B35]/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                            
-                            <div class="px-6 py-4 border-b border-gms-border bg-gms-bg">
-                                <div class="flex justify-between items-start">
-                                    <Badge variant="outline" class="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-600 border-gray-200">
-                                        {{ plan.type }}
-                                    </Badge>
-                                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button @click="openForm(plan)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
-                                            <Edit2 class="w-4 h-4" />
-                                        </button>
-                                        <button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
-                                            <Trash2 class="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
-                                <h3 class="font-black text-gms-text">{{ plan.name }}</h3>
-                                <p class="text-sm  text-gray-400">{{ plan.code }}</p>
+                            <div v-if="plan.name.toLowerCase().includes('premium')" class="absolute -top-4 left-1/2 -translate-x-1/2">
+                                <span class="bg-[#FF6B35] text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-[0.2em] rounded-full">Most Popular</span>
                             </div>
                             
-                            <div>
-                                <div class="my-4">
-                                    <span class="text-4xl font-extrabold text-gms-text">{{ formatCurrency(plan.price, plan.currency) }}</span>
-                                    <span v-if="plan.duration_days" class="text-gray-500 "> / {{ plan.duration_days }} days</span>
-                                </div>
-                                
-                                <div class="space-y-3 mt-6">
-                                    <div class="flex items-center gap-3 text-sm text-gray-600">
-                                        <Clock class="w-4 h-4 text-gray-400" />
-                                        <span>{{ plan.duration_days ? `${plan.duration_days} Days Duration` : 'Open-ended (No expiry)' }}</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-sm text-gray-600">
-                                        <component :is="plan.visit_limit ? Activity : Infinity" class="w-4 h-4 text-gray-400" />
-                                        <span>{{ plan.visit_limit ? `${plan.visit_limit} Visits Included` : 'Unlimited Visits Included' }}</span>
-                                    </div>
+                            <!-- Card Actions -->
+                            <div class="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button @click="openForm(plan)" class="p-1.5 text-gms-text-muted hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                                    <Edit2 class="w-4 h-4" />
+                                </button>
+                                <button class="p-1.5 text-gms-text-muted hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                                    <Trash2 class="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            <div class="mb-6">
+                                <h3 class="text-xs font-black uppercase tracking-[0.2em] mb-4" :class="plan.name.toLowerCase().includes('premium') ? 'text-[#FF6B35]' : 'text-gms-text-muted'">{{ plan.name }}</h3>
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-5xl font-black text-gms-text">{{ formatCurrency(plan.price, plan.currency) }}</span>
+                                    <span class="text-gms-text-muted font-semibold text-sm">/ {{ plan.duration_days }} days</span>
                                 </div>
                             </div>
+                            
+                            <ul class="flex-1 space-y-3 mb-8">
+                                <li v-for="feature in (plan.description ? plan.description.split('\n') : [])" :key="feature" class="flex items-start gap-3 text-sm font-medium text-gms-text">
+                                    <CheckCircle2 class="w-4 h-4 text-[#FF6B35] shrink-0 mt-0.5" />
+                                    {{ feature }}
+                                </li>
+                            </ul>
+                            
+                            <button
+                                @click="openForm(plan)"
+                                class="w-full text-center py-3.5 rounded-xl font-black text-sm transition duration-200 uppercase tracking-wider hover:-translate-y-0.5 active:translate-y-0"
+                                :class="plan.name.toLowerCase().includes('premium')
+                                    ? 'bg-[#FF6B35] text-white hover:bg-[#e55a28] shadow-[0_4px_20px_rgba(255,85,0,0.3)]'
+                                    : 'border border-gms-border text-gms-text hover:border-gms-text/20 hover:bg-gms-bg'"
+                            >
+                                Edit {{ plan.name }}
+                            </button>
                         </div>
                     </div>
                 </div>
