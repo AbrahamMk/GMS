@@ -302,12 +302,12 @@ const navLinks = [
                     <p class="mt-4 text-gray-500  max-w-xl mx-auto">Flexible plans designed to match your commitment and your budget.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
                     <div v-for="(plan, i) in plansList" :key="plan.name"
                         v-motion
                         :initial="{ opacity: 0, y: 30 }"
                         :visible="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 350, damping: 28, delay: i * 100 } }"
-                        class="relative flex flex-col p-8 border transition duration-300"
+                        class="relative flex flex-col p-10 border transition duration-300 rounded-3xl"
                         :class="plan.popular
                             ? 'border-[#FF6B35] bg-[#FF6B35]/5 shadow-[0_0_40px_rgba(255,85,0,0.12)]'
                             : 'border-white/5 bg-[#141414] hover:border-white/10'">

@@ -158,14 +158,14 @@ const formatCurrency = (amount, currency) => {
                         Available Plans
                     </h2>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div 
                             v-for="(plan, index) in plans" 
                             :key="plan.id"
                             v-motion
                             :initial="{ opacity: 0, y: 30 }"
                             :visible="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 350, damping: 28, delay: index * 100 } }"
-                            class="relative flex flex-col p-8 border transition duration-300 rounded-3xl"
+                            class="relative flex flex-col p-10 border transition duration-300 rounded-3xl"
                             :class="plan.name.toLowerCase().includes('premium')
                                 ? 'border-[#FF6B35] bg-[#FF6B35]/5 shadow-[0_0_40px_rgba(255,85,0,0.12)]'
                                 : 'border-gms-border bg-gms-surface hover:border-gms-text/20'"
