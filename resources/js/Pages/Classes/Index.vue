@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Button from '@/Components/ui/button/Button.vue';
 import Badge from '@/Components/ui/badge/Badge.vue';
@@ -29,7 +29,7 @@ defineProps({
                     <p class="mt-3 max-w-xl text-base font-medium leading-relaxed text-gms-text-muted">Create gym classes, schedule training sessions, set capacities, and assign coaches.</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex flex-wrap gap-3">
-                    <Button class="bg-[#FF6B35] text-[#111111] hover:bg-[#e55a28] font-bold rounded-xl shadow-[0_4px_14px_rgba(184,245,0,0.3)] border-none transition-all hover:-translate-y-0.5 active:translate-y-0">+ New Class</Button>
+                    <Button :as="Link" href="/portal/classes?new=1" class="bg-[#FF6B35] text-[#111111] hover:bg-[#e55a28] font-bold rounded-xl shadow-[0_4px_14px_rgba(184,245,0,0.3)] border-none transition-all hover:-translate-y-0.5 active:translate-y-0">+ New Class</Button>
                 </div>
             </div>
 
@@ -63,12 +63,12 @@ defineProps({
                     </div>
 
                     <div class="mt-4 pt-4 border-t border-gms-border flex gap-2">
-                        <button class="flex-1 bg-gms-bg text-gms-text py-2.5 rounded-xl font-bold hover:bg-gms-surface-hover transition border border-gms-border text-sm">
+                        <Link :href="`/portal/classes?edit=${gymClass.id}`" class="flex-1 bg-gms-bg text-gms-text text-center py-2.5 rounded-xl font-bold hover:bg-gms-surface-hover transition border border-gms-border text-sm">
                             Edit
-                        </button>
-                        <button class="flex-1 bg-[#d1fae5] text-[#059669] py-2.5 rounded-xl font-bold hover:opacity-90 transition text-sm">
+                        </Link>
+                        <Link href="/portal/bookings" class="flex-1 bg-[#d1fae5] text-[#059669] text-center py-2.5 rounded-xl font-bold hover:opacity-90 transition text-sm">
                             Sessions
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

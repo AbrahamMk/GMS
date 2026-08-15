@@ -42,8 +42,9 @@ defineProps({
                     
                     <div>
                         <div class="flex items-center justify-between mb-5">
-                            <div class="w-16 h-16 bg-gms-bg rounded-2xl flex items-center justify-center text-2xl font-black text-gms-text-muted border border-gms-border">
-                                {{ trainer.first_name[0] }}{{ trainer.last_name[0] }}
+                            <div class="w-16 h-16 bg-gms-bg rounded-2xl overflow-hidden flex items-center justify-center text-2xl font-black text-gms-text-muted border border-gms-border shrink-0">
+                                <img v-if="trainer.image_url" :src="trainer.image_url" :alt="trainer.first_name" class="w-full h-full object-cover object-top" />
+                                <span v-else>{{ trainer.first_name[0] }}{{ trainer.last_name[0] }}</span>
                             </div>
                             <span :class="trainer.is_active ? 'bg-[#d1fae5] text-[#059669]' : 'bg-gms-bg text-gms-text-muted'" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
                                 {{ trainer.is_active ? 'Active' : 'Inactive' }}

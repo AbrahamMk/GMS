@@ -35,11 +35,15 @@ class MemberController extends Controller
         ]);
     }
 
-    public function show(Member $member)
+    public function show(int $member)
     {
         // Reload the member without branch scope so admins without a branch can view any member
-        $member = Member::withoutGlobalScope(BranchScope::class)->findOrFail($member->id);
-        $member->load(['memberships.plan']);
+        $member = Member::withoutGlobalScope(BranchScope::class)->findOrFail($member);
+        $memberships = $member->memberships()
+            ->withoutGlobalScope(BranchScope::class)
+            ->with('plan')
+            ->latest('starts_at')
+            ->get();
 
         $attendances = $member->attendanceSessions()
             ->withoutGlobalScope(BranchScope::class)
@@ -67,7 +71,7 @@ class MemberController extends Controller
                 'address'       => $member->address,
                 'created_at'    => $member->created_at,
             ],
-            'memberships' => $member->memberships->map(fn ($membership) => [
+            'memberships' => $memberships->map(fn ($membership) => [
                 'id'               => $membership->id,
                 'plan_name'        => $membership->plan?->name ?? 'N/A',
                 'status'           => $membership->status,

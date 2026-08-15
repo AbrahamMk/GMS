@@ -14,18 +14,20 @@ class TrainerController extends Controller
     {
         $branch = $branchContext->branch();
         
-        $trainers = Trainer::query()
-            ->where('branch_id', $branch->id)
-            ->latest()
-            ->get();
+        $query = Trainer::query()->latest();
+
+        if ($branch && isset($branch->id)) {
+            $query->where('branch_id', $branch->id);
+        }
 
         return Inertia::render('Trainers/Index', [
-            'trainers' => $trainers,
+            'trainers' => $query->get(),
         ]);
     }
 
-    public function show(Trainer $trainer): Response
+    public function show(int $trainer): Response
     {
+        $trainer = Trainer::withoutGlobalScopes()->findOrFail($trainer);
         $trainer->load('sessions.gymClass');
 
         return Inertia::render('Trainers/Show', [

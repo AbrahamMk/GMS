@@ -33,8 +33,9 @@ defineProps({
                 class="bg-gms-surface p-8 rounded-3xl shadow-sm border border-gms-border flex flex-col sm:flex-row items-center justify-between gap-6 transition-colors"
             >
                 <div class="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-                    <div class="w-24 h-24 bg-gms-bg rounded-2xl flex items-center justify-center text-4xl font-black text-gms-text-muted border border-gms-border">
-                        {{ trainer.first_name[0] }}{{ trainer.last_name[0] }}
+                    <div class="w-24 h-24 bg-gms-bg rounded-2xl overflow-hidden flex items-center justify-center text-4xl font-black text-gms-text-muted border border-gms-border shrink-0">
+                        <img v-if="trainer.image_url" :src="trainer.image_url" :alt="trainer.first_name" class="w-full h-full object-cover object-top" />
+                        <span v-else>{{ trainer.first_name[0] }}{{ trainer.last_name[0] }}</span>
                     </div>
                     <div>
                         <h1 class="text-3xl font-black text-gms-text">{{ trainer.first_name }} {{ trainer.last_name }}</h1>

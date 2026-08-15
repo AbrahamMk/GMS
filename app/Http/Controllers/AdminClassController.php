@@ -15,7 +15,7 @@ class AdminClassController extends Controller
     {
         $branch = $branchContext->branch();
 
-        $classesQuery = GymClass::query()->with(['sessions.trainer'])->latest();
+        $classesQuery = GymClass::query()->with(['sessions', 'trainer'])->latest();
         $trainersQuery = Trainer::query()->where('is_active', true);
 
         if ($branch && isset($branch->id)) {

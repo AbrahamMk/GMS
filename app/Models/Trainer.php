@@ -17,6 +17,7 @@ class Trainer extends Model
         'phone',
         'bio',
         'specializations',
+        'image_url',
         'is_active',
     ];
 

@@ -15,12 +15,12 @@ final class PaymentController extends Controller
     {
         // Summary stats
         $totalRevenue = Membership::query()
-            ->join('membership_plans', 'memberships.plan_id', '=', 'membership_plans.id')
+            ->join('membership_plans', 'memberships.membership_plan_id', '=', 'membership_plans.id')
             ->where('memberships.status', 'active')
             ->sum('membership_plans.price');
 
         $thisMonthRevenue = Membership::query()
-            ->join('membership_plans', 'memberships.plan_id', '=', 'membership_plans.id')
+            ->join('membership_plans', 'memberships.membership_plan_id', '=', 'membership_plans.id')
             ->whereMonth('memberships.starts_at', now()->month)
             ->whereYear('memberships.starts_at', now()->year)
             ->sum('membership_plans.price');
@@ -44,7 +44,7 @@ final class PaymentController extends Controller
 
         // Revenue breakdown by plan
         $revenueByPlan = DB::table('memberships')
-            ->join('membership_plans', 'memberships.plan_id', '=', 'membership_plans.id')
+            ->join('membership_plans', 'memberships.membership_plan_id', '=', 'membership_plans.id')
             ->select('membership_plans.name', DB::raw('COUNT(*) as count'), DB::raw('SUM(membership_plans.price) as revenue'))
             ->groupBy('membership_plans.name')
             ->orderByDesc('revenue')

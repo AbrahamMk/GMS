@@ -61,12 +61,18 @@ const plans = [
     },
 ];
 
-const trainers = [
+const props = defineProps({
+    dbTrainers: { type: Array, default: () => [] }
+});
+
+const defaultTrainers = [
     { name: 'Alex Morgan', role: 'Strength & Conditioning', img: trainerAlexImg },
     { name: 'Sarah Johnson', role: 'HIIT & Functional Training', img: trainerSarahImg },
     { name: 'Daniel Carter', role: 'Personal Training', img: '/images/trainer-daniel.jpg' },
     { name: 'Maya Williams', role: 'Yoga & Mobility', img: '/images/trainer-maya.jpg' },
 ];
+
+const trainersList = props.dbTrainers && props.dbTrainers.length > 0 ? props.dbTrainers : defaultTrainers;
 
 const facilities = [
     { name: 'Strength Zone', img: facilityStrengthImg, desc: 'Premium free weights and power racks.' },
@@ -346,7 +352,7 @@ const navLinks = [
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    <div v-for="(trainer, i) in trainers" :key="trainer.name"
+                    <div v-for="(trainer, i) in trainersList" :key="trainer.name"
                         v-motion
                         :initial="{ opacity: 0, y: 30 }"
                         :visible="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 350, damping: 28, delay: i * 100 } }"

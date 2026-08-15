@@ -17,7 +17,16 @@ Route::get('/', function () {
         return Redirect::route('portal.dashboard');
     }
 
-    return Inertia::render('Welcome');
+    $dbTrainers = \App\Models\Trainer::query()->where('is_active', true)->get()->map(fn ($t) => [
+        'id' => $t->id,
+        'name' => $t->first_name . ' ' . $t->last_name,
+        'role' => $t->specializations || 'Fitness Coach',
+        'img' => $t->image_url,
+    ]);
+
+    return Inertia::render('Welcome', [
+        'dbTrainers' => $dbTrainers,
+    ]);
 });
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

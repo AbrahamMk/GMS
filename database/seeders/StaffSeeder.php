@@ -322,6 +322,61 @@ class StaffSeeder extends Seeder
                 ]
             );
 
+            // Seed Trainers matching the web landing page
+            $trainersData = [
+                [
+                    'first_name' => 'Alex',
+                    'last_name' => 'Morgan',
+                    'email' => 'alex.morgan@fithub.com',
+                    'phone' => '+251911000001',
+                    'bio' => 'Certified Strength & Conditioning Specialist with 8+ years experience training elite athletes.',
+                    'specializations' => 'Strength & Conditioning',
+                    'image_url' => '/images/trainer-alex.jpg',
+                    'is_active' => true,
+                ],
+                [
+                    'first_name' => 'Sarah',
+                    'last_name' => 'Johnson',
+                    'email' => 'sarah.johnson@fithub.com',
+                    'phone' => '+251911000002',
+                    'bio' => 'High-energy HIIT coach focusing on endurance, fat burn, and explosive movement.',
+                    'specializations' => 'HIIT & Functional Training',
+                    'image_url' => '/images/trainer-sarah.jpg',
+                    'is_active' => true,
+                ],
+                [
+                    'first_name' => 'Daniel',
+                    'last_name' => 'Carter',
+                    'email' => 'daniel.carter@fithub.com',
+                    'phone' => '+251911000003',
+                    'bio' => 'Personal coach dedicated to custom weight management and muscle building programs.',
+                    'specializations' => 'Personal Training',
+                    'image_url' => '/images/trainer-daniel.jpg',
+                    'is_active' => true,
+                ],
+                [
+                    'first_name' => 'Maya',
+                    'last_name' => 'Williams',
+                    'email' => 'maya.williams@fithub.com',
+                    'phone' => '+251911000004',
+                    'bio' => 'Holistic mobility specialist helping athletes recover and build core functional flexibility.',
+                    'specializations' => 'Yoga & Mobility',
+                    'image_url' => '/images/trainer-maya.jpg',
+                    'is_active' => true,
+                ],
+            ];
+
+            foreach ($trainersData as $tData) {
+                \App\Models\Trainer::query()->updateOrCreate(
+                    [
+                        'branch_id' => $mainBranch->getKey(),
+                        'first_name' => $tData['first_name'],
+                        'last_name' => $tData['last_name'],
+                    ],
+                    array_merge($tData, ['branch_id' => $mainBranch->getKey()])
+                );
+            }
+
             $branchContext->clear();
         } finally {
             $branchContext->clear();
