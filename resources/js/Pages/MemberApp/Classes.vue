@@ -11,6 +11,7 @@ const props = defineProps({
 
 const search = ref('');
 const selectedDay = ref(0);
+const activeTab = ref('all'); // 'all' or 'scheduled'
 
 const days = computed(() => {
     const result = [];
@@ -29,13 +30,22 @@ const days = computed(() => {
 const filteredClasses = computed(() => {
     let list = props.classes || [];
 
-    // Filter by selected day
-    const selectedDate = days.value[selectedDay.value]?.date;
-    if (selectedDate) {
-        list = list.filter(c => {
-            if (!c.starts_at) return true;
-            return c.starts_at.startsWith(selectedDate) || new Date(c.starts_at).toISOString().startsWith(selectedDate);
-        });
+    // Filter by tab
+    if (activeTab.value === 'scheduled') {
+        list = list.filter(c => c.is_booked);
+    }
+
+    // Filter by selected day (only if viewing 'all' classes, or maybe always?)
+    // If viewing scheduled, we might want to see all scheduled classes regardless of day, 
+    // but the user might still want to filter. Let's only apply day filter if activeTab is 'all'.
+    if (activeTab.value === 'all') {
+        const selectedDate = days.value[selectedDay.value]?.date;
+        if (selectedDate) {
+            list = list.filter(c => {
+                if (!c.starts_at) return true;
+                return c.starts_at.startsWith(selectedDate) || new Date(c.starts_at).toISOString().startsWith(selectedDate);
+            });
+        }
     }
 
     // Filter by search
@@ -91,9 +101,27 @@ const bookClass = (sessionId) => {
                         >
                     </div>
                 </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mt-4 bg-gms-surface p-1 rounded-2xl border border-gms-border">
+                    <button 
+                        @click="activeTab = 'all'"
+                        class="flex-1 py-2 text-sm font-bold rounded-xl transition-all"
+                        :class="activeTab === 'all' ? 'bg-[#FF6B35] text-white shadow-sm' : 'text-gms-text-muted hover:text-gms-text'"
+                    >
+                        Available Classes
+                    </button>
+                    <button 
+                        @click="activeTab = 'scheduled'"
+                        class="flex-1 py-2 text-sm font-bold rounded-xl transition-all"
+                        :class="activeTab === 'scheduled' ? 'bg-[#FF6B35] text-white shadow-sm' : 'text-gms-text-muted hover:text-gms-text'"
+                    >
+                        Scheduled Classes
+                    </button>
+                </div>
                 
-                <!-- Date scroller -->
-                <div class="flex gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide snap-x" v-motion-fade-visible>
+                <!-- Date scroller (only show for Available Classes) -->
+                <div v-if="activeTab === 'all'" class="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide snap-x" v-motion-fade-visible>
                     <div 
                         v-for="(day, i) in days" :key="i"
                         @click="selectedDay = i"
@@ -174,8 +202,12 @@ const bookClass = (sessionId) => {
                 <!-- Empty state -->
                 <div v-if="filteredClasses.length === 0" class="text-center py-16 rounded-3xl bg-gms-surface border border-gms-border">
                     <CalendarCheck class="w-12 h-12 mx-auto text-gms-text-muted mb-4 opacity-40" />
-                    <p class="text-gms-text font-bold text-lg mb-1">No classes scheduled</p>
-                    <p class="text-gms-text-muted text-sm">Try a different day or check back later.</p>
+                    <p class="text-gms-text font-bold text-lg mb-1">
+                        {{ activeTab === 'scheduled' ? 'No booked classes' : 'No classes scheduled' }}
+                    </p>
+                    <p class="text-gms-text-muted text-sm">
+                        {{ activeTab === 'scheduled' ? 'Book an available class to see your schedule here.' : 'Try a different day or check back later.' }}
+                    </p>
                 </div>
             </div>
 
