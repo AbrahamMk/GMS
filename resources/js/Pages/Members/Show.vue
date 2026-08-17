@@ -1,21 +1,48 @@
 <script setup>
+import { ref } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Button from '@/Components/ui/button/Button.vue';
-import { ArrowLeft, User, Phone, Mail, MapPin, Calendar, Clock, CreditCard, Activity, CheckCircle2 } from '@lucide/vue';
-import { Link } from '@inertiajs/vue3';
+import { ArrowLeft, User, Phone, Mail, MapPin, Calendar, Clock, CreditCard, Activity, CheckCircle2, RefreshCw, X, ShieldCheck } from '@lucide/vue';
+import { Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     member: { type: Object, required: true },
     memberships: { type: Array, default: () => [] },
+    plans: { type: Array, default: () => [] },
     attendances: { type: Array, default: () => [] },
 });
 
+const isRenewModalOpen = ref(false);
+
+const renewForm = useForm({
+    membership_plan_id: props.plans[0]?.id || 1,
+    duration_months: 1,
+});
+
+const openRenewModal = () => {
+    if (props.plans.length > 0) {
+        renewForm.membership_plan_id = props.plans[0].id;
+    }
+    isRenewModalOpen.value = true;
+};
+
+const closeRenewModal = () => {
+    isRenewModalOpen.value = false;
+};
+
+const submitRenewal = () => {
+    renewForm.post(`/portal/members/${props.member.id}/renew`, {
+        preserveScroll: true,
+        onSuccess: () => closeRenewModal(),
+    });
+};
+
 const getStatusBg = (status) => {
     switch (status?.toLowerCase()) {
-        case 'active': return 'bg-[#d1fae5] text-[#059669]';
-        case 'inactive': return 'bg-gms-bg text-gms-text-muted';
-        case 'suspended': return 'bg-[#ffe4e6] text-[#e11d48]';
-        default: return 'bg-gms-bg text-gms-text-muted';
+        case 'active': return 'bg-gms-success-surface text-gms-success border border-gms-success-border';
+        case 'inactive': return 'bg-gms-bg text-gms-text-muted border border-gms-border';
+        case 'suspended': return 'bg-gms-error-surface text-gms-error border border-gms-error-border';
+        default: return 'bg-gms-bg text-gms-text-muted border border-gms-border';
     }
 };
 
@@ -44,8 +71,66 @@ const formatTime = (d) => {
                     <ArrowLeft class="w-4 h-4" /> Back to Members
                 </Link>
                 <div class="flex gap-2">
-                    <Button variant="outline" class="border-gms-border text-gms-text font-bold">Edit Profile</Button>
-                    <Button class="bg-[#FF6B35] text-white hover:bg-[#e55a28] font-bold shadow-[0_4px_14px_rgba(184,245,0,0.25)]">Renew Membership</Button>
+                    <Button @click="openRenewModal" class="bg-[#FF6B35] text-white hover:bg-[#e55a28] font-bold shadow-[0_4px_14px_rgba(255,107,53,0.3)] border-none flex items-center gap-2">
+                        <RefreshCw class="w-4 h-4" /> Renew Membership
+                    </Button>
+                </div>
+            </div>
+
+            <!-- Renew Membership Modal -->
+            <div v-if="isRenewModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" @click.self="closeRenewModal">
+                <div 
+                    v-motion
+                    :initial="{ opacity: 0, scale: 0.95 }"
+                    :enter="{ opacity: 1, scale: 1, transition: { duration: 200 } }"
+                    class="w-full max-w-md rounded-3xl border border-gms-border bg-gms-surface p-6 shadow-2xl space-y-6"
+                >
+                    <div class="flex items-center justify-between border-b border-gms-border pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-[#FF6B35]/15 border border-[#FF6B35]/30 flex items-center justify-center text-[#FF6B35]">
+                                <RefreshCw class="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gms-text">Renew Membership</h3>
+                                <p class="text-xs text-gms-text-muted">For {{ member.first_name }} {{ member.last_name }}</p>
+                            </div>
+                        </div>
+                        <button @click="closeRenewModal" class="text-gms-text-muted hover:text-gms-text p-1.5 rounded-lg hover:bg-gms-surface-hover transition">
+                            <X class="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    <form @submit.prevent="submitRenewal" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gms-text-muted mb-1.5">Select Membership Plan *</label>
+                            <select v-model="renewForm.membership_plan_id" class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-2.5 text-sm text-gms-text focus:outline-none focus:border-[#FF6B35]">
+                                <option v-for="plan in plans" :key="plan.id" :value="plan.id">
+                                    {{ plan.name }} — {{ plan.currency || 'ETB' }} {{ plan.price }} ({{ plan.type || 'Monthly' }})
+                                </option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gms-text-muted mb-1.5">Duration (Months) *</label>
+                            <input 
+                                v-model="renewForm.duration_months" 
+                                type="number" 
+                                min="1" 
+                                max="24" 
+                                required 
+                                class="w-full rounded-xl border border-gms-border bg-gms-bg px-4 py-2.5 text-sm text-gms-text font-bold focus:outline-none focus:border-[#FF6B35]" 
+                            />
+                        </div>
+
+                        <div class="pt-4 border-t border-gms-border flex justify-end gap-3">
+                            <Button type="button" variant="outline" @click="closeRenewModal" class="border-gms-border text-gms-text hover:bg-gms-surface-hover">
+                                Cancel
+                            </Button>
+                            <Button type="submit" :disabled="renewForm.processing" class="bg-[#FF6B35] text-white hover:bg-[#e55a28] font-bold">
+                                {{ renewForm.processing ? 'Processing...' : 'Confirm Renewal' }}
+                            </Button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -59,7 +144,7 @@ const formatTime = (d) => {
                         class="rounded-3xl border border-gms-border bg-gms-surface shadow-sm overflow-hidden"
                     >
                         <div class="h-24 bg-[#111111] relative">
-                            <div class="absolute -bottom-10 left-6 w-20 h-20 rounded-full border-4 border-white bg-gms-bg flex items-center justify-center text-2xl font-black text-gms-text shadow">
+                            <div class="absolute -bottom-10 left-6 w-20 h-20 rounded-full border-4 border-gms-surface bg-gms-bg flex items-center justify-center text-2xl font-black text-gms-text shadow">
                                 {{ member.first_name?.charAt(0) }}{{ member.last_name?.charAt(0) }}
                             </div>
                         </div>
@@ -78,7 +163,7 @@ const formatTime = (d) => {
                                 <div class="flex items-center gap-3 text-sm text-gms-text-muted"><Mail class="w-4 h-4 shrink-0" /><span class="">{{ member.email || 'No email' }}</span></div>
                                 <div class="flex items-start gap-3 text-sm text-gms-text-muted"><MapPin class="w-4 h-4 shrink-0 mt-0.5" /><span class="">{{ member.address || 'No address' }}</span></div>
                                 <div class="flex items-center gap-3 text-sm text-gms-text-muted"><User class="w-4 h-4 shrink-0" /><span class="">{{ member.gender || 'Not specified' }} · Born {{ formatDate(member.date_of_birth) }}</span></div>
-                                <div class="flex items-center gap-3 text-sm text-gms-text-muted pt-3 border-t border-[#F5F5F5] mt-3"><Calendar class="w-4 h-4 shrink-0" /><span class="">Joined {{ formatDate(member.created_at) }}</span></div>
+                                <div class="flex items-center gap-3 text-sm text-gms-text-muted pt-3 border-t border-gms-border mt-3"><Calendar class="w-4 h-4 shrink-0" /><span class="">Joined {{ formatDate(member.created_at) }}</span></div>
                             </div>
                         </div>
                     </div>
@@ -97,12 +182,12 @@ const formatTime = (d) => {
                             <CreditCard class="w-5 h-5 text-gms-text-muted" />
                             <h3 class="font-black text-gms-text">Active &amp; Past Memberships</h3>
                         </div>
-                        <div v-if="memberships.length > 0" class="divide-y divide-[#F5F5F5]">
-                            <div v-for="m in memberships" :key="m.id" class="p-5 hover:bg-[#FAFAFA] transition-colors">
+                        <div v-if="memberships.length > 0" class="divide-y divide-gms-border">
+                            <div v-for="m in memberships" :key="m.id" class="p-5 hover:bg-gms-surface-hover transition-colors">
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                                     <div>
                                         <h4 class="font-black text-gms-text">{{ m.plan_name }}</h4>
-                                        <div class="flex flex-wrap items-center gap-4 mt-1.5 text-sm text-gms-text-muted ">
+                                        <div class="flex flex-wrap items-center gap-4 mt-1.5 text-sm text-gms-text-muted">
                                             <div class="flex items-center gap-1.5"><Calendar class="w-3.5 h-3.5" /><span>{{ formatDate(m.starts_at) }} – {{ formatDate(m.ends_at) }}</span></div>
                                             <div v-if="m.remaining_visits !== null" class="flex items-center gap-1.5"><Activity class="w-3.5 h-3.5" /><span>{{ m.remaining_visits }} visits left</span></div>
                                         </div>
@@ -111,7 +196,7 @@ const formatTime = (d) => {
                                 </div>
                             </div>
                         </div>
-                        <div v-else class="p-8 text-center text-gms-text-muted ">No membership history found.</div>
+                        <div v-else class="p-8 text-center text-gms-text-muted">No membership history found.</div>
                     </div>
 
                     <!-- Attendance -->
@@ -127,7 +212,7 @@ const formatTime = (d) => {
                         </div>
                         <div v-if="attendances.length > 0" class="overflow-x-auto">
                             <table class="w-full text-sm">
-                                <thead class="bg-gms-bg text-[11px]  uppercase tracking-[0.15em] text-gms-text-muted">
+                                <thead class="bg-gms-bg text-[11px] uppercase tracking-[0.15em] text-gms-text-muted">
                                     <tr>
                                         <th class="px-6 py-3 text-left">Date</th>
                                         <th class="px-6 py-3 text-left">Check In</th>
@@ -135,13 +220,13 @@ const formatTime = (d) => {
                                         <th class="px-6 py-3 text-left">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-[#F5F5F5]">
-                                    <tr v-for="a in attendances" :key="a.id" class="hover:bg-[#FAFAFA] transition-colors">
-                                        <td class="px-6 py-3  text-gms-text">{{ formatDate(a.checked_in_at) }}</td>
-                                        <td class="px-6 py-3 text-gms-text-muted ">{{ formatTime(a.checked_in_at) }}</td>
-                                        <td class="px-6 py-3 text-gms-text-muted ">{{ a.checked_out_at ? formatTime(a.checked_out_at) : '—' }}</td>
+                                <tbody class="divide-y divide-gms-border">
+                                    <tr v-for="a in attendances" :key="a.id" class="hover:bg-gms-surface-hover transition-colors">
+                                        <td class="px-6 py-3 text-gms-text">{{ formatDate(a.checked_in_at) }}</td>
+                                        <td class="px-6 py-3 text-gms-text-muted">{{ formatTime(a.checked_in_at) }}</td>
+                                        <td class="px-6 py-3 text-gms-text-muted">{{ a.checked_out_at ? formatTime(a.checked_out_at) : '—' }}</td>
                                         <td class="px-6 py-3">
-                                            <span class="inline-flex items-center gap-1.5 rounded-full bg-[#d1fae5] text-[#059669] text-[10px] font-bold uppercase tracking-wide px-2.5 py-1">
+                                            <span class="inline-flex items-center gap-1.5 rounded-full bg-gms-success-surface text-gms-success border border-gms-success-border text-[10px] font-bold uppercase tracking-wide px-2.5 py-1">
                                                 <CheckCircle2 class="h-3 w-3" /> {{ a.status }}
                                             </span>
                                         </td>
@@ -149,13 +234,10 @@ const formatTime = (d) => {
                                 </tbody>
                             </table>
                         </div>
-                        <div v-else class="p-8 text-center text-gms-text-muted ">No attendance records found.</div>
+                        <div v-else class="p-8 text-center text-gms-text-muted">No attendance records found.</div>
                     </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
-
-
-

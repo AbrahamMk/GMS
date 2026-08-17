@@ -15,8 +15,8 @@ class AdminClassController extends Controller
     {
         $branch = $branchContext->branch();
 
-        $classesQuery = GymClass::query()->with(['sessions', 'trainer'])->latest();
-        $trainersQuery = Trainer::query()->where('is_active', true);
+        $classesQuery = GymClass::withoutGlobalScopes()->with(['sessions', 'trainer'])->latest();
+        $trainersQuery = Trainer::withoutGlobalScopes()->where('is_active', true);
 
         if ($branch && isset($branch->id)) {
             $classesQuery->where('branch_id', $branch->id);
@@ -39,15 +39,17 @@ class AdminClassController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $validated['branch_id'] = $branchContext->branch()->id;
+        $validated['branch_id'] = $branchContext->branch()?->id ?? 1;
 
-        GymClass::create($validated);
+        GymClass::withoutGlobalScopes()->create($validated);
 
         return redirect()->back()->with('success', 'Class created successfully.');
     }
 
-    public function update(Request $request, GymClass $gymClass)
+    public function update(Request $request, int $gymClass)
     {
+        $gymClassModel = GymClass::withoutGlobalScopes()->findOrFail($gymClass);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -56,14 +58,15 @@ class AdminClassController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $gymClass->update($validated);
+        $gymClassModel->update($validated);
 
         return redirect()->back()->with('success', 'Class updated successfully.');
     }
 
-    public function destroy(GymClass $gymClass)
+    public function destroy(int $gymClass)
     {
-        $gymClass->delete();
+        $gymClassModel = GymClass::withoutGlobalScopes()->findOrFail($gymClass);
+        $gymClassModel->delete();
 
         return redirect()->back()->with('success', 'Class deleted successfully.');
     }

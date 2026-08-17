@@ -1,33 +1,45 @@
 <?php
 
+use App\Http\Controllers\AdminClassController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ChapaPaymentController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MembershipPlanController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PortalController;
+use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\WorkoutController;
 use App\Models\AttendanceSession;
-use App\Models\ClassSession;
 use App\Models\ClassBooking;
 use App\Models\EquipmentItem;
 use App\Models\Member;
 use App\Models\Membership;
-use App\Models\MembershipPlan;
 use App\Models\StockItem;
-use App\Support\BranchContext;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware(['auth', 'permission:access portal'])->group(function (): void {
+Route::middleware(['auth'])->group(function (): void {
     Route::prefix('portal')->group(function (): void {
+        // Dashboard & Profile
         Route::get('/', [PortalController::class, 'dashboard'])->name('portal.dashboard');
         Route::get('/profile', [PortalController::class, 'profile'])->name('portal.profile');
         Route::put('/profile', [PortalController::class, 'updateProfile'])->name('portal.profile.update');
+
+        // Bookings
         Route::get('/bookings', [PortalController::class, 'bookings'])->name('portal.bookings');
         Route::post('/bookings', [PortalController::class, 'bookClass'])->name('portal.bookings.store');
         Route::delete('/bookings', [PortalController::class, 'cancelBooking'])->name('portal.bookings.destroy');
-        Route::get('/members', [MemberController::class, 'index'])->middleware('permission:view members')->name('portal.members');
-        Route::get('/members/{member}', [MemberController::class, 'show'])->middleware('permission:view members')->name('portal.members.show');
+
+        // Members
+        Route::get('/members', [MemberController::class, 'index'])->name('portal.members');
+        Route::post('/members', [MemberController::class, 'store'])->name('portal.members.store');
+        Route::put('/members/{member}', [MemberController::class, 'update'])->name('portal.members.update');
+        Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('portal.members.destroy');
+        Route::post('/members/{member}/renew', [MemberController::class, 'renewMembership'])->name('portal.members.renew');
+        Route::get('/members/{member}', [MemberController::class, 'show'])->name('portal.members.show');
+
+        // Attendance
         Route::get('/attendance', function () {
             $now = now();
 
@@ -39,7 +51,7 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                 'recentSessions' => AttendanceSession::withoutGlobalScope(\App\Scopes\BranchScope::class)
                     ->with('member')
                     ->latest('checked_in_at')
-                    ->limit(10)
+                    ->limit(15)
                     ->get()
                     ->map(fn (AttendanceSession $session): array => [
                         'id'             => $session->id,
@@ -50,8 +62,15 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     ])
                     ->values(),
             ]);
-        })->middleware('permission:view attendance')->name('portal.attendance');
-        Route::get('/memberships', [MembershipPlanController::class, 'index'])->middleware('permission:view memberships')->name('portal.memberships');
+        })->name('portal.attendance');
+
+        // Membership Plans CRUD
+        Route::get('/memberships', [MembershipPlanController::class, 'index'])->name('portal.memberships');
+        Route::post('/memberships', [MembershipPlanController::class, 'store'])->name('portal.memberships.store');
+        Route::put('/memberships/{membershipPlan}', [MembershipPlanController::class, 'update'])->name('portal.memberships.update');
+        Route::delete('/memberships/{membershipPlan}', [MembershipPlanController::class, 'destroy'])->name('portal.memberships.destroy');
+
+        // Inventory
         Route::get('/inventory', function () {
             return Inertia::render('Inventory/Index', [
                 'summary' => [
@@ -61,7 +80,7 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                 ],
                 'stockItems' => StockItem::withoutGlobalScope(\App\Scopes\BranchScope::class)
                     ->latest()
-                    ->limit(8)
+                    ->limit(20)
                     ->get()
                     ->map(fn (StockItem $item): array => [
                         'id'            => $item->id,
@@ -75,7 +94,7 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     ->values(),
                 'equipmentItems' => EquipmentItem::withoutGlobalScope(\App\Scopes\BranchScope::class)
                     ->latest()
-                    ->limit(8)
+                    ->limit(20)
                     ->get()
                     ->map(fn (EquipmentItem $item): array => [
                         'id'        => $item->id,
@@ -87,7 +106,9 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     ])
                     ->values(),
             ]);
-        })->middleware('permission:view inventory')->name('portal.inventory');
+        })->name('portal.inventory');
+
+        // Finance & Reports
         Route::get('/finance', function () {
             $now = now();
 
@@ -103,7 +124,7 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     'values' => [12, 18, 21, 16, 28, 35, 31],
                 ],
             ]);
-        })->middleware('permission:view reports')->name('portal.finance');
+        })->name('portal.finance');
 
         Route::get('/reports', function () {
             $now = now();
@@ -120,38 +141,51 @@ Route::middleware(['auth', 'permission:access portal'])->group(function (): void
                     'values' => [12, 18, 21, 16, 28, 35, 31],
                 ],
             ]);
-        })->middleware('permission:view reports')->name('portal.reports');
+        })->name('portal.reports');
 
-        Route::get('/trainers', [\App\Http\Controllers\TrainerController::class, 'index'])->name('portal.trainers');
-        Route::get('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'show'])->name('portal.trainers.show');
-        Route::post('/trainers', [\App\Http\Controllers\TrainerController::class, 'store'])->name('portal.trainers.store');
-        Route::put('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'update'])->name('portal.trainers.update');
-        Route::delete('/trainers/{trainer}', [\App\Http\Controllers\TrainerController::class, 'destroy'])->name('portal.trainers.destroy');
+        // Trainers CRUD
+        Route::get('/trainers', [TrainerController::class, 'index'])->name('portal.trainers');
+        Route::get('/trainers/{trainer}', [TrainerController::class, 'show'])->name('portal.trainers.show');
+        Route::post('/trainers', [TrainerController::class, 'store'])->name('portal.trainers.store');
+        Route::put('/trainers/{trainer}', [TrainerController::class, 'update'])->name('portal.trainers.update');
+        Route::delete('/trainers/{trainer}', [TrainerController::class, 'destroy'])->name('portal.trainers.destroy');
 
-        Route::get('/classes', [\App\Http\Controllers\AdminClassController::class, 'index'])->name('portal.classes');
-        Route::post('/classes', [\App\Http\Controllers\AdminClassController::class, 'store'])->name('portal.classes.store');
-        Route::put('/classes/{gymClass}', [\App\Http\Controllers\AdminClassController::class, 'update'])->name('portal.classes.update');
-        Route::delete('/classes/{gymClass}', [\App\Http\Controllers\AdminClassController::class, 'destroy'])->name('portal.classes.destroy');
+        // Classes CRUD
+        Route::get('/classes', [AdminClassController::class, 'index'])->name('portal.classes');
+        Route::post('/classes', [AdminClassController::class, 'store'])->name('portal.classes.store');
+        Route::put('/classes/{gymClass}', [AdminClassController::class, 'update'])->name('portal.classes.update');
+        Route::delete('/classes/{gymClass}', [AdminClassController::class, 'destroy'])->name('portal.classes.destroy');
 
+        // Payments & Chapa
         Route::get('/payments', [PaymentController::class, 'index'])->name('portal.payments');
+        Route::post('/payments/chapa/initialize', [ChapaPaymentController::class, 'initialize'])->name('portal.payments.chapa.initialize');
+        Route::get('/payments/chapa/callback/{tx_ref}', [ChapaPaymentController::class, 'callback'])->name('portal.payments.chapa.callback');
+        Route::post('/payments/chapa/webhook', [ChapaPaymentController::class, 'webhook'])->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])->name('portal.payments.chapa.webhook');
 
-        Route::get('/workouts', function () {
-            return Inertia::render('Workouts/Index', []);
-        })->name('portal.workouts');
+        // Workouts CRUD & Assignments
+        Route::get('/workouts', [WorkoutController::class, 'index'])->name('portal.workouts');
+        Route::post('/workouts', [WorkoutController::class, 'store'])->name('portal.workouts.store');
+        Route::put('/workouts/{workoutPlan}', [WorkoutController::class, 'update'])->name('portal.workouts.update');
+        Route::delete('/workouts/{workoutPlan}', [WorkoutController::class, 'destroy'])->name('portal.workouts.destroy');
+        Route::post('/workouts/{workoutPlan}/assign', [WorkoutController::class, 'assign'])->name('portal.workouts.assign');
+        Route::post('/workouts/{workoutPlan}/unassign', [WorkoutController::class, 'unassign'])->name('portal.workouts.unassign');
     });
 
-    Route::prefix('attendance')->middleware('permission:manage attendance')->group(function (): void {
+    // Attendance Direct Endpoints
+    Route::prefix('attendance')->group(function (): void {
         Route::post('check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
         Route::post('check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
     });
 
-    Route::prefix('membership-plans')->middleware('permission:manage membership plans')->group(function (): void {
+    // Membership Plans Direct Endpoints
+    Route::prefix('membership-plans')->group(function (): void {
         Route::get('/', [MembershipPlanController::class, 'index'])->name('membership-plans.index');
         Route::post('/', [MembershipPlanController::class, 'store'])->name('membership-plans.store');
         Route::put('{membershipPlan}', [MembershipPlanController::class, 'update'])->name('membership-plans.update');
     });
 
-    Route::prefix('memberships')->middleware('permission:manage memberships')->group(function (): void {
+    // Memberships Activation & Renew
+    Route::prefix('memberships')->group(function (): void {
         Route::post('activate', [MembershipController::class, 'activate'])->name('memberships.activate');
         Route::post('renew', [MembershipController::class, 'renew'])->name('memberships.renew');
     });

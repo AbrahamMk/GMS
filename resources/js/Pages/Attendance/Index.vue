@@ -94,14 +94,14 @@ const formatTime = (dateStr) => {
                         <button
                             @click="activeTab = 'checkin'"
                             class="flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all"
-                            :class="activeTab === 'checkin' ? 'text-gms-text border-b-2 border-[#FF6B35] bg-[#fafafa]' : 'text-gms-text-muted hover:text-gms-text'"
+                            :class="activeTab === 'checkin' ? 'text-gms-text border-b-2 border-[#FF6B35] bg-gms-surface-hover' : 'text-gms-text-muted hover:text-gms-text'"
                         >
                             <UserCheck class="h-4 w-4" /> Check-in
                         </button>
                         <button
                             @click="activeTab = 'checkout'"
                             class="flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all"
-                            :class="activeTab === 'checkout' ? 'text-gms-text border-b-2 border-[#FF6B35] bg-[#fafafa]' : 'text-gms-text-muted hover:text-gms-text'"
+                            :class="activeTab === 'checkout' ? 'text-gms-text border-b-2 border-[#FF6B35] bg-gms-surface-hover' : 'text-gms-text-muted hover:text-gms-text'"
                         >
                             <LogOut class="h-4 w-4" /> Check-out
                         </button>
@@ -221,14 +221,14 @@ const formatTime = (dateStr) => {
                                     <th class="px-6 py-3 text-left">Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#F5F5F5]">
+                            <tbody class="divide-y divide-gms-border">
                                 <tr
                                     v-for="(session, i) in recentSessions"
                                     :key="session.id"
                                     v-motion
                                     :initial="{ opacity: 0, x: 8 }"
                                     :enter="{ opacity: 1, x: 0, transition: { delay: 200 + i * 50 } }"
-                                    class="hover:bg-[#FAFAFA] transition-colors"
+                                    class="hover:bg-gms-surface-hover transition-colors"
                                 >
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -8,7 +9,7 @@
 @source '../**/*.vue';
 
 @theme {
-    --font-sans: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --color-brand-50: oklch(0.985 0.018 105.5);
     --color-brand-100: oklch(0.96 0.042 103.1);
     --color-brand-200: oklch(0.912 0.08 100.8);
@@ -103,9 +104,11 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         @apply bg-gms-bg text-gms-text antialiased;
         background:
             radial-gradient(circle at top left, var(--gms-gradient-from), transparent 28%),

@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'chapa' => [
+        'secret_key' => env('CHAPA_SECRET_KEY', 'CHASECK_TEST-4S9b7X5z3Y2w1v0u'),
+        'public_key' => env('CHAPA_PUBLIC_KEY', 'CHAPUBK_TEST-4S9b7X5z3Y2w1v0u'),
+        'base_url'   => 'https://api.chapa.co/v1',
+    ],
+
 ];

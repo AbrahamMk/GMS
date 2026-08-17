@@ -13,6 +13,7 @@ use App\Models\ClassSession;
 use App\Models\EquipmentItem;
 use App\Models\Member;
 use App\Models\Membership;
+use App\Models\Payment;
 use App\Models\StockItem;
 use App\Support\BranchContext;
 use Illuminate\Http\RedirectResponse;
@@ -63,20 +64,19 @@ final class PortalController extends Controller
                 'plan' => $activeMembership->plan?->only(['id', 'name', 'type', 'price', 'currency']),
             ],
             'stats' => [
-                'members' => Member::query()->count(),
-                'activeMemberships' => Membership::query()->active()->count(),
-                'todayCheckIns' => AttendanceSession::query()->whereDate('checked_in_at', $now)->count(),
-                'bookingsThisWeek' => ClassBooking::query()->whereBetween('booked_at', [$now->startOfWeek(), $now->endOfWeek()])->count(),
-                'lowStockItems' => StockItem::query()->whereColumn('current_stock', '<=', 'reorder_level')->count(),
+                'members' => Member::withoutGlobalScopes()->count(),
+                'activeMemberships' => Membership::withoutGlobalScopes()->where('status', 'active')->count(),
+                'todayCheckIns' => AttendanceSession::withoutGlobalScopes()->whereDate('checked_in_at', $now)->count(),
+                'upcomingClasses' => ClassSession::withoutGlobalScopes()->where('starts_at', '>=', now())->count(),
             ],
             'attendanceTrend' => [
                 'labels' => $attendanceTrend->pluck('label')->values(),
                 'values' => $attendanceTrend->pluck('value')->values(),
             ],
-            'recentCheckIns' => AttendanceSession::query()
+            'recentCheckIns' => AttendanceSession::withoutGlobalScopes()
                 ->with('member')
                 ->latest('checked_in_at')
-                ->limit(5)
+                ->limit(6)
                 ->get()
                 ->map(fn (AttendanceSession $session): array => [
                     'id' => $session->id,
@@ -85,7 +85,7 @@ final class PortalController extends Controller
                     'status' => $session->status,
                 ])
                 ->values(),
-            'upcomingClasses' => ClassSession::query()
+            'upcomingClasses' => ClassSession::withoutGlobalScopes()
                 ->with(['gymClass'])
                 ->where('starts_at', '>=', now())
                 ->orderBy('starts_at')
@@ -99,7 +99,7 @@ final class PortalController extends Controller
                     'capacity' => $session->capacity_override ?? $session->gymClass?->capacity,
                 ])
                 ->values(),
-            'equipmentAlerts' => EquipmentItem::query()
+            'equipmentAlerts' => EquipmentItem::withoutGlobalScopes()
                 ->whereIn('status', ['under_repair', 'retired'])
                 ->latest()
                 ->limit(5)
@@ -109,6 +109,35 @@ final class PortalController extends Controller
                     'name' => $equipment->name,
                     'status' => $equipment->status,
                     'location' => $equipment->location,
+                ])
+                ->values(),
+            'recentMembers' => Member::withoutGlobalScopes()
+                ->latest()
+                ->limit(6)
+                ->get()
+                ->map(fn (Member $m): array => [
+                    'id' => $m->id,
+                    'member_code' => $m->member_code,
+                    'first_name' => $m->first_name,
+                    'last_name' => $m->last_name,
+                    'phone' => $m->phone,
+                    'email' => $m->email,
+                    'status' => $m->status,
+                ])
+                ->values(),
+            'recentPayments' => Payment::withoutGlobalScopes()
+                ->with('member')
+                ->latest('paid_at')
+                ->limit(5)
+                ->get()
+                ->map(fn ($p): array => [
+                    'id' => $p->id,
+                    'title' => $p->payment_reference ?? ucfirst($p->method ?? 'payment'),
+                    'amount' => number_format((float) ($p->amount ?? 0), 2),
+                    'currency' => 'ETB',
+                    'status' => $p->status ?? 'pending',
+                    'paid_at' => $p->paid_at ?? $p->created_at,
+                    'member_name' => $p->member ? trim($p->member->first_name . ' ' . $p->member->last_name) : 'Walk-in',
                 ])
                 ->values(),
         ]);

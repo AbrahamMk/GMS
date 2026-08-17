@@ -13,6 +13,7 @@ import {
     UsersRound,
     WalletCards,
     UserCog,
+    Package,
 } from '@lucide/vue';
 
 const page = usePage();
@@ -30,15 +31,15 @@ const mainNav = [
     { name: 'Memberships', href: '/portal/memberships', icon: WalletCards },
     { name: 'Classes', href: '/portal/classes', icon: CalendarDays },
     { name: 'Trainers', href: '/portal/trainers', icon: UserCog },
-    { name: 'Finance & Analytics', href: '/portal/finance', icon: BarChart3 },
-    { name: 'Payments', href: '/portal/payments', icon: CreditCard },
     { name: 'Workouts', href: '/portal/workouts', icon: Dumbbell },
-    { name: 'Report', href: '/portal/reports', icon: BarChart3 },
+    { name: 'Payments', href: '/portal/payments', icon: CreditCard },
+    { name: 'Inventory', href: '/portal/inventory', icon: Package },
+    { name: 'Reports', href: '/portal/reports', icon: BarChart3 },
 ];
 
 const isActive = (href) => {
-    if (href === '/portal') return page.url === '/portal';
-    return page.url === href || page.url.startsWith(href + '/');
+    if (href === '/portal') return page.url === '/portal' || page.url === '/portal/';
+    return page.url === href || page.url.startsWith(href + '/') || page.url.startsWith(href + '?');
 };
 
 const branch = computed(() => page.props.branch ?? null);
@@ -54,7 +55,7 @@ const flashError = computed(() => page.props.flash?.error ?? null);
             <header class="mb-5 rounded-[1.75rem] bg-gms-surface px-5 py-4 lg:px-6 shadow-sm border border-gms-border transition-colors">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="grid h-11 w-11 place-items-center rounded-2xl bg-[#111111] text-lg font-black tracking-tighter text-[#FF6B35]">G</div>
+                        <Link href="/portal" class="grid h-11 w-11 place-items-center rounded-2xl bg-[#111111] text-lg font-black tracking-tighter text-[#FF6B35] hover:opacity-90 transition">G</Link>
                         <div>
                             <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-gms-text-muted">Gym management</p>
                             <div class="mt-1 flex flex-wrap items-center gap-3">
@@ -68,11 +69,11 @@ const flashError = computed(() => page.props.flash?.error ?? null);
                         <ThemeToggle />
                         <div class="rounded-2xl border border-gms-border bg-gms-surface px-4 py-2 shadow-sm">
                             <p class="text-[10px] uppercase tracking-[0.2em] text-gms-text-muted">Signed in</p>
-                            <p class=" text-gms-text">{{ authUser?.name ?? 'Guest' }}</p>
+                            <p class="font-bold text-gms-text">{{ authUser?.name ?? 'Admin User' }}</p>
                         </div>
                         <button
                             type="button"
-                            class="flex h-11 items-center gap-2 rounded-2xl border border-gms-border bg-gms-surface px-4 text-sm font-semibold transition hover:bg-gms-surface-hover shadow-sm text-gms-text"
+                            class="flex h-11 items-center gap-2 rounded-2xl border border-gms-border bg-gms-surface px-4 text-sm font-semibold transition hover:bg-gms-surface-hover shadow-sm text-gms-text cursor-pointer"
                             :disabled="logoutForm.processing"
                             @click="logout"
                         >
@@ -103,7 +104,7 @@ const flashError = computed(() => page.props.flash?.error ?? null);
                         v-for="item in mainNav"
                         :key="item.name"
                         :href="item.href"
-                        class="shrink-0 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm  transition-all duration-150 lg:w-full"
+                        class="shrink-0 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-150 lg:w-full"
                         :class="isActive(item.href) ? 'bg-[#FF6B35] text-white shadow-[0_4px_14px_rgba(255,107,53,0.25)]' : 'text-gms-text-muted hover:bg-gms-bg hover:text-gms-text'"
                     >
                         <component :is="item.icon" class="h-[17px] w-[17px] shrink-0" :stroke-width="2.5" />
@@ -116,7 +117,7 @@ const flashError = computed(() => page.props.flash?.error ?? null);
                               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B35] opacity-75"></span>
                               <span class="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B35]"></span>
                             </span>
-                            <span class="text-[10px] text-[#5a5a5a] font-semibold uppercase tracking-widest">All systems go</span>
+                            <span class="text-[10px] text-gms-text-muted font-semibold uppercase tracking-widest">All systems active</span>
                         </div>
                     </div>
                 </nav>
@@ -129,6 +130,3 @@ const flashError = computed(() => page.props.flash?.error ?? null);
         </div>
     </div>
 </template>
-
-
-

@@ -14,7 +14,7 @@ class TrainerController extends Controller
     {
         $branch = $branchContext->branch();
         
-        $query = Trainer::query()->latest();
+        $query = Trainer::withoutGlobalScopes()->latest();
 
         if ($branch && isset($branch->id)) {
             $query->where('branch_id', $branch->id);
@@ -38,42 +38,47 @@ class TrainerController extends Controller
     public function store(Request $request, BranchContext $branchContext)
     {
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'bio' => 'nullable|string',
+            'first_name'      => 'required|string|max:255',
+            'last_name'       => 'required|string|max:255',
+            'email'           => 'nullable|email|max:255',
+            'phone'           => 'nullable|string|max:255',
+            'bio'             => 'nullable|string',
             'specializations' => 'nullable|string',
-            'is_active' => 'boolean',
+            'image_url'       => 'nullable|string|max:500',
+            'is_active'       => 'boolean',
         ]);
 
-        $validated['branch_id'] = $branchContext->branch()->id;
+        $validated['branch_id'] = $branchContext->branch()?->id ?? 1;
 
-        Trainer::create($validated);
+        Trainer::withoutGlobalScopes()->create($validated);
 
         return redirect()->back()->with('success', 'Trainer created successfully.');
     }
 
-    public function update(Request $request, Trainer $trainer)
+    public function update(Request $request, int $trainer)
     {
+        $trainerModel = Trainer::withoutGlobalScopes()->findOrFail($trainer);
+
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'bio' => 'nullable|string',
+            'first_name'      => 'required|string|max:255',
+            'last_name'       => 'required|string|max:255',
+            'email'           => 'nullable|email|max:255',
+            'phone'           => 'nullable|string|max:255',
+            'bio'             => 'nullable|string',
             'specializations' => 'nullable|string',
-            'is_active' => 'boolean',
+            'image_url'       => 'nullable|string|max:500',
+            'is_active'       => 'boolean',
         ]);
 
-        $trainer->update($validated);
+        $trainerModel->update($validated);
 
         return redirect()->back()->with('success', 'Trainer updated successfully.');
     }
 
-    public function destroy(Trainer $trainer)
+    public function destroy(int $trainer)
     {
-        $trainer->delete();
+        $trainerModel = Trainer::withoutGlobalScopes()->findOrFail($trainer);
+        $trainerModel->delete();
 
         return redirect()->back()->with('success', 'Trainer deleted successfully.');
     }

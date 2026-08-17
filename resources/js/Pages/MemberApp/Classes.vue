@@ -1,18 +1,73 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { Head, useForm } from '@inertiajs/vue3';
 import MemberLayout from '@/Layouts/MemberLayout.vue';
-import { Search, Filter, Clock, MapPin, Users } from '@lucide/vue';
+import { Search, Filter, Clock, MapPin, Users, CalendarCheck, Loader2 } from '@lucide/vue';
 
-defineProps({
-    classes: Array,
+const props = defineProps({
+    classes: { type: Array, default: () => [] },
+    member: { type: Object, default: null },
 });
 
-const mockClasses = [
-    { id: 1, name: 'Morning HIIT', time: '07:00 AM', duration: '45m', instructor: 'Alex M.', location: 'Main Floor', booked: 18, capacity: 20, type: 'Cardio' },
-    { id: 2, name: 'Powerlifting Base', time: '10:00 AM', duration: '60m', instructor: 'Marcus T.', location: 'Free Weights', booked: 8, capacity: 10, type: 'Strength' },
-    { id: 3, name: 'CrossFit WOD', time: '18:00 PM', duration: '60m', instructor: 'Sarah J.', location: 'Box A', booked: 12, capacity: 20, type: 'Mixed' },
-    { id: 4, name: 'Yoga Flow', time: '19:30 PM', duration: '50m', instructor: 'Elena V.', location: 'Studio 2', booked: 15, capacity: 15, type: 'Flexibility' },
-];
+const search = ref('');
+const selectedDay = ref(0);
+
+const days = computed(() => {
+    const result = [];
+    for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() + i);
+        result.push({
+            label: i === 0 ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'short' }),
+            day: d.getDate(),
+            date: d.toISOString().split('T')[0],
+        });
+    }
+    return result;
+});
+
+const filteredClasses = computed(() => {
+    let list = props.classes || [];
+
+    // Filter by selected day
+    const selectedDate = days.value[selectedDay.value]?.date;
+    if (selectedDate) {
+        list = list.filter(c => {
+            if (!c.starts_at) return true;
+            return c.starts_at.startsWith(selectedDate) || new Date(c.starts_at).toISOString().startsWith(selectedDate);
+        });
+    }
+
+    // Filter by search
+    if (search.value.trim()) {
+        const q = search.value.toLowerCase();
+        list = list.filter(c =>
+            c.title?.toLowerCase().includes(q) ||
+            c.trainer?.toLowerCase().includes(q)
+        );
+    }
+    return list;
+});
+
+const formatTime = (dateStr) => {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+};
+
+const formatDuration = (start, end) => {
+    if (!start || !end) return '—';
+    const diff = (new Date(end) - new Date(start)) / 60000;
+    return diff >= 60 ? `${Math.round(diff / 60)}h ${diff % 60 > 0 ? `${diff % 60}m` : ''}`.trim() : `${diff}m`;
+};
+
+const bookingForm = useForm({ class_session_id: null });
+
+const bookClass = (sessionId) => {
+    bookingForm.class_session_id = sessionId;
+    bookingForm.post('/portal/book-class', {
+        preserveScroll: true,
+    });
+};
 </script>
 
 <template>
@@ -27,39 +82,28 @@ const mockClasses = [
                 
                 <div class="flex gap-3" v-motion-fade-visible>
                     <div class="relative flex-1">
-                        <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gms-text-secondary" />
+                        <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gms-text-muted" />
                         <input 
+                            v-model="search"
                             type="text" 
-                            placeholder="Find a class..." 
+                            placeholder="Find a class or trainer..." 
                             class="w-full bg-gms-surface border border-gms-border text-gms-text rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35] transition-all"
                         >
                     </div>
-                    <button class="bg-gms-surface border border-gms-border p-3 rounded-xl hover:bg-gms-surface-hover transition-colors flex items-center justify-center text-gms-text">
-                        <Filter class="w-5 h-5" />
-                    </button>
                 </div>
                 
                 <!-- Date scroller -->
                 <div class="flex gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide snap-x" v-motion-fade-visible>
-                    <div class="min-w-[70px] bg-[#FF6B35] text-white rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer shadow-[0_0_15px_rgba(184,245,0,0.2)]">
-                        <span class="text-xs font-bold uppercase">Today</span>
-                        <span class="text-xl font-black">14</span>
-                    </div>
-                    <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs  text-gms-text-muted uppercase">Wed</span>
-                        <span class="text-xl font-bold text-gms-text">15</span>
-                    </div>
-                    <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs  text-gms-text-muted uppercase">Thu</span>
-                        <span class="text-xl font-bold text-gms-text">16</span>
-                    </div>
-                    <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs  text-gms-text-muted uppercase">Fri</span>
-                        <span class="text-xl font-bold text-gms-text">17</span>
-                    </div>
-                    <div class="min-w-[70px] bg-gms-surface border border-gms-border rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer hover:border-[#FF6B35] transition-colors">
-                        <span class="text-xs  text-gms-text-muted uppercase">Sat</span>
-                        <span class="text-xl font-bold text-gms-text">18</span>
+                    <div 
+                        v-for="(day, i) in days" :key="i"
+                        @click="selectedDay = i"
+                        class="min-w-[70px] rounded-2xl p-3 flex flex-col items-center justify-center snap-center cursor-pointer transition-all select-none"
+                        :class="selectedDay === i 
+                            ? 'bg-[#FF6B35] text-white shadow-[0_4px_14px_rgba(255,107,53,0.3)]' 
+                            : 'bg-gms-surface border border-gms-border hover:border-[#FF6B35] text-gms-text'"
+                    >
+                        <span class="text-xs font-bold uppercase">{{ day.label }}</span>
+                        <span class="text-xl font-black mt-0.5">{{ day.day }}</span>
                     </div>
                 </div>
             </div>
@@ -67,7 +111,7 @@ const mockClasses = [
             <!-- Classes List -->
             <div class="space-y-4">
                 <div 
-                    v-for="(cls, i) in mockClasses" 
+                    v-for="(cls, i) in filteredClasses" 
                     :key="cls.id"
                     v-motion
                     :initial="{ opacity: 0, y: 20 }"
@@ -76,38 +120,62 @@ const mockClasses = [
                 >
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <span class="inline-block px-2.5 py-1 rounded bg-gms-bg text-[10px] font-bold text-gms-text-secondary border border-gms-border mb-2 uppercase tracking-wider">
-                                {{ cls.type }}
-                            </span>
-                            <h3 class="text-xl font-black text-gms-text">{{ cls.name }}</h3>
-                            <p class="text-sm text-[#FF6B35] font-bold mt-1">{{ cls.instructor }}</p>
+                            <h3 class="text-xl font-black text-gms-text">{{ cls.title }}</h3>
+                            <p class="text-sm text-[#FF6B35] font-bold mt-1">{{ cls.trainer }}</p>
+                            <p v-if="cls.description" class="text-xs text-gms-text-muted mt-1 line-clamp-1">{{ cls.description }}</p>
                         </div>
-                        <div class="text-right">
-                            <div class="text-lg font-black text-gms-text">{{ cls.time }}</div>
-                            <div class="text-xs text-gms-text-muted font-bold mt-0.5 uppercase tracking-wider">{{ cls.duration }}</div>
+                        <div class="text-right shrink-0 ml-4">
+                            <div class="text-lg font-black text-gms-text">{{ formatTime(cls.starts_at) }}</div>
+                            <div class="text-xs text-gms-text-muted font-bold mt-0.5 uppercase tracking-wider">
+                                {{ formatDuration(cls.starts_at, cls.ends_at) }}
+                            </div>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-4 text-xs text-gms-text-muted font-semibold mb-5">
                         <div class="flex items-center gap-1.5">
-                            <MapPin class="w-4 h-4 shrink-0 text-gms-text-muted" />
-                            <span>{{ cls.location }}</span>
+                            <Clock class="w-4 h-4 shrink-0" />
+                            <span>{{ formatTime(cls.starts_at) }} – {{ formatTime(cls.ends_at) }}</span>
                         </div>
-                        <div class="flex items-center gap-1.5" :class="cls.booked >= cls.capacity ? 'text-[#e11d48]' : ''">
-                            <Users class="w-4 h-4 shrink-0 text-gms-text-muted" />
+                        <div 
+                            class="flex items-center gap-1.5"
+                            :class="cls.booked >= cls.capacity ? 'text-[#e11d48]' : ''"
+                        >
+                            <Users class="w-4 h-4 shrink-0" />
                             <span>{{ cls.booked }}/{{ cls.capacity }} spots</span>
                         </div>
                     </div>
 
+                    <!-- Capacity bar -->
+                    <div class="h-1.5 bg-gms-border rounded-full mb-5 overflow-hidden">
+                        <div 
+                            class="h-full rounded-full transition-all"
+                            :class="cls.booked >= cls.capacity ? 'bg-[#e11d48]' : 'bg-[#FF6B35]'"
+                            :style="{ width: `${Math.min((cls.booked / cls.capacity) * 100, 100)}%` }"
+                        />
+                    </div>
+
                     <button 
-                        class="w-full py-3.5 rounded-xl font-black transition-all active:scale-[0.98] border-none"
-                        :class="cls.booked >= cls.capacity 
-                            ? 'bg-gms-border text-gms-text-muted cursor-not-allowed' 
-                            : 'bg-gms-text text-gms-text-inverse hover:opacity-90'"
-                        :disabled="cls.booked >= cls.capacity"
+                        class="w-full py-3.5 rounded-xl font-black transition-all active:scale-[0.98] border-none flex items-center justify-center gap-2"
+                        :class="cls.is_booked 
+                            ? 'bg-gms-success-surface text-gms-success cursor-default border border-gms-success-border'
+                            : cls.booked >= cls.capacity 
+                                ? 'bg-gms-border text-gms-text-muted cursor-not-allowed' 
+                                : 'bg-gms-text text-gms-text-inverse hover:opacity-90'"
+                        :disabled="cls.booked >= cls.capacity || cls.is_booked || bookingForm.processing"
+                        @click="!cls.is_booked && cls.booked < cls.capacity && bookClass(cls.id)"
                     >
-                        {{ cls.booked >= cls.capacity ? 'Waitlist' : 'Book Class' }}
+                        <Loader2 v-if="bookingForm.processing && bookingForm.class_session_id === cls.id" class="w-4 h-4 animate-spin" />
+                        <CalendarCheck v-else-if="cls.is_booked" class="w-4 h-4" />
+                        <span>{{ cls.is_booked ? 'Booked ✓' : cls.booked >= cls.capacity ? 'Class Full' : 'Book Class' }}</span>
                     </button>
+                </div>
+
+                <!-- Empty state -->
+                <div v-if="filteredClasses.length === 0" class="text-center py-16 rounded-3xl bg-gms-surface border border-gms-border">
+                    <CalendarCheck class="w-12 h-12 mx-auto text-gms-text-muted mb-4 opacity-40" />
+                    <p class="text-gms-text font-bold text-lg mb-1">No classes scheduled</p>
+                    <p class="text-gms-text-muted text-sm">Try a different day or check back later.</p>
                 </div>
             </div>
 
@@ -124,6 +192,3 @@ const mockClasses = [
     scrollbar-width: none;
 }
 </style>
-
-
-
