@@ -18,10 +18,15 @@ const days = computed(() => {
     for (let i = 0; i < 7; i++) {
         const d = new Date();
         d.setDate(d.getDate() + i);
+        
+        // Build a robust local date string 'YYYY-MM-DD'
+        const pad = n => n < 10 ? '0' + n : n;
+        const localDateStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
         result.push({
             label: i === 0 ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'short' }),
             day: d.getDate(),
-            date: d.toISOString().split('T')[0],
+            date: localDateStr,
         });
     }
     return result;
@@ -35,15 +40,20 @@ const filteredClasses = computed(() => {
         list = list.filter(c => c.is_booked);
     }
 
-    // Filter by selected day (only if viewing 'all' classes, or maybe always?)
-    // If viewing scheduled, we might want to see all scheduled classes regardless of day, 
-    // but the user might still want to filter. Let's only apply day filter if activeTab is 'all'.
+    // Filter by selected day (only if viewing 'all' classes)
     if (activeTab.value === 'all') {
-        const selectedDate = days.value[selectedDay.value]?.date;
-        if (selectedDate) {
+        const selectedDateStr = days.value[selectedDay.value]?.date;
+        if (selectedDateStr) {
             list = list.filter(c => {
                 if (!c.starts_at) return true;
-                return c.starts_at.startsWith(selectedDate) || new Date(c.starts_at).toISOString().startsWith(selectedDate);
+                
+                // If it's a raw string like "2026-08-18 09:00:00", we can check startswith directly.
+                // Or if we parse it, we should check its local date representation:
+                const d = new Date(c.starts_at);
+                const pad = n => n < 10 ? '0' + n : n;
+                const cLocalDateStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+                
+                return cLocalDateStr === selectedDateStr || c.starts_at.startsWith(selectedDateStr);
             });
         }
     }
