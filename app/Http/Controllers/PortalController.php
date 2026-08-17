@@ -206,28 +206,34 @@ final class PortalController extends Controller
         $now = app(BranchContext::class)->now();
 
         return Inertia::render('Portal/Bookings', [
-            'member' => $member?->only(['id', 'member_code', 'first_name', 'last_name']),
-            'myBookings' => $member === null
-                ? []
-                : ClassBooking::query()
-                    ->with(['classSession.gymClass'])
-                    ->where('member_id', $member->getKey())
-                    ->latest('booked_at')
-                    ->get()
-                    ->map(fn (ClassBooking $booking): array => [
-                        'id' => $booking->id,
-                        'status' => $booking->status,
-                        'waitlist_position' => $booking->waitlist_position,
-                        'confirmed_at' => $booking->confirmed_at,
-                        'booked_at' => $booking->booked_at,
-                        'session' => [
-                            'id' => $booking->classSession?->id,
-                            'name' => $booking->classSession?->gymClass?->name,
-                            'starts_at' => $booking->classSession?->starts_at,
-                            'ends_at' => $booking->classSession?->ends_at,
-                        ],
-                    ])
-                    ->values(),
+            'members' => Member::withoutGlobalScope(BranchScope::class)
+                ->select(['id', 'member_code', 'first_name', 'last_name'])
+                ->get()
+                ->map(fn($m) => [
+                    'id' => $m->id,
+                    'name' => trim($m->first_name . ' ' . $m->last_name),
+                    'code' => $m->member_code
+                ]),
+            'recentBookings' => ClassBooking::withoutGlobalScope(BranchScope::class)
+                ->with(['classSession.gymClass', 'member'])
+                ->latest('booked_at')
+                ->limit(20)
+                ->get()
+                ->map(fn (ClassBooking $booking): array => [
+                    'id' => $booking->id,
+                    'member_name' => $booking->member ? trim($booking->member->first_name . ' ' . $booking->member->last_name) : 'Unknown',
+                    'status' => $booking->status,
+                    'waitlist_position' => $booking->waitlist_position,
+                    'confirmed_at' => $booking->confirmed_at,
+                    'booked_at' => $booking->booked_at,
+                    'session' => [
+                        'id' => $booking->classSession?->id,
+                        'name' => $booking->classSession?->gymClass?->name,
+                        'starts_at' => $booking->classSession?->starts_at,
+                        'ends_at' => $booking->classSession?->ends_at,
+                    ],
+                ])
+                ->values(),
             'upcomingSessions' => ClassSession::query()
                 ->with(['gymClass', 'bookings'])
                 ->where('starts_at', '>=', $now)
@@ -255,12 +261,20 @@ final class PortalController extends Controller
             abort(401);
         }
 
-        $member = Member::withoutGlobalScope(BranchScope::class)->where('user_id', $user->id)->first();
-        if (!$member && $user->email) {
-            $member = Member::withoutGlobalScope(BranchScope::class)->where('email', $user->email)->first();
+        $memberId = $request->input('member_id');
+        if ($memberId) {
+            $member = Member::withoutGlobalScope(BranchScope::class)->find($memberId);
+        } else {
+            $member = Member::withoutGlobalScope(BranchScope::class)->where('user_id', $user->id)->first();
+            if (!$member && $user->email) {
+                $member = Member::withoutGlobalScope(BranchScope::class)->where('email', $user->email)->first();
+            }
         }
 
         if ($member === null) {
+            if ($memberId) {
+                abort(404, 'Member not found');
+            }
             // Auto-create member record for user if missing
             $nameParts = explode(' ', $user->name, 2);
             $maxId = Member::withoutGlobalScope(BranchScope::class)->max('id') ?? 0;
