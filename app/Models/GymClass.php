@@ -9,6 +9,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GymClass extends BranchModel
 {
+    protected $fillable = [
+        'branch_id',
+        'name',
+        'description',
+        'trainer_id',
+        'trainer_user_id',
+        'capacity',
+        'duration_minutes',
+        'schedule_time',
+        'is_active',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -19,6 +31,11 @@ class GymClass extends BranchModel
     }
 
     public function trainer(): BelongsTo
+    {
+        return $this->belongsTo(Trainer::class, 'trainer_id');
+    }
+
+    public function trainerUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_user_id');
     }

@@ -248,56 +248,78 @@ final class PortalController extends Controller
         ]);
     }
 
-    public function bookClass(BookClassRequest $request): RedirectResponse
+    public function bookClass(Request $request): RedirectResponse
     {
-        $member = $request->user()?->member()->first();
-
-        if ($member === null) {
-            abort(403);
+        $user = $request->user();
+        if (!$user) {
+            abort(401);
         }
 
-        $payload = $request->validated();
-        $session = ClassSession::query()->with(['gymClass', 'bookings'])->findOrFail((int) $payload['class_session_id']);
-        $now = app(BranchContext::class)->now();
+        $member = Member::withoutGlobalScope(BranchScope::class)->where('user_id', $user->id)->first();
+        if (!$member && $user->email) {
+            $member = Member::withoutGlobalScope(BranchScope::class)->where('email', $user->email)->first();
+        }
+
+        if ($member === null) {
+            // Auto-create member record for user if missing
+            $nameParts = explode(' ', $user->name, 2);
+            $maxId = Member::withoutGlobalScope(BranchScope::class)->max('id') ?? 0;
+            $member = Member::withoutGlobalScope(BranchScope::class)->create([
+                'user_id'           => $user->id,
+                'branch_id'         => $user->branch_id ?? 1,
+                'member_code'       => 'MBR-' . str_pad((string)($maxId + 1), 3, '0', STR_PAD_LEFT),
+                'first_name'        => $nameParts[0] ?? 'Member',
+                'last_name'         => $nameParts[1] ?? 'User',
+                'email'             => $user->email,
+                'phone'             => $user->phone ?? null,
+                'status'            => 'active',
+                'registration_type' => 'online',
+                'joined_at'         => now(),
+            ]);
+        }
+
+        $sessionId = (int) $request->input('class_session_id');
+        $session = ClassSession::withoutGlobalScope(BranchScope::class)->with(['gymClass', 'bookings'])->findOrFail($sessionId);
+        $now = now();
 
         DB::transaction(function () use ($member, $session, $now): void {
-            $existingBooking = ClassBooking::query()
+            $existingBooking = ClassBooking::withoutGlobalScope(BranchScope::class)
                 ->where('class_session_id', $session->getKey())
                 ->where('member_id', $member->getKey())
-                ->lockForUpdate()
+                ->where('status', 'booked')
                 ->first();
 
             if ($existingBooking !== null) {
-                abort(422, 'The member is already booked for this class.');
+                return;
             }
 
-            $capacity = $session->capacity_override ?? $session->gymClass?->capacity ?? 0;
-            $confirmedBookings = ClassBooking::query()
+            $capacity = $session->capacity_override ?? $session->gymClass?->capacity ?? 20;
+            $confirmedBookings = ClassBooking::withoutGlobalScope(BranchScope::class)
                 ->where('class_session_id', $session->getKey())
                 ->where('status', 'booked')
                 ->whereNull('waitlist_position')
-                ->lockForUpdate()
                 ->count();
 
             $isWaitlisted = $confirmedBookings >= $capacity;
-            $nextWaitlistPosition = ClassBooking::query()
+            $nextWaitlistPosition = ClassBooking::withoutGlobalScope(BranchScope::class)
                 ->where('class_session_id', $session->getKey())
-                ->lockForUpdate()
                 ->max('waitlist_position');
 
-            ClassBooking::query()->create([
+            ClassBooking::withoutGlobalScope(BranchScope::class)->create([
+                'branch_id'        => $session->branch_id ?? 1,
                 'class_session_id' => $session->getKey(),
-                'member_id' => $member->getKey(),
-                'status' => 'booked',
-                'waitlist_position' => $isWaitlisted
+                'member_id'        => $member->getKey(),
+                'booked_by_user_id'=> $member->user_id,
+                'status'           => 'booked',
+                'waitlist_position'=> $isWaitlisted
                     ? (int) ($nextWaitlistPosition ?? 0) + 1
                     : null,
-                'confirmed_at' => $isWaitlisted ? null : $now,
-                'booked_at' => $now,
+                'confirmed_at'     => $isWaitlisted ? null : $now,
+                'booked_at'        => $now,
             ]);
         });
 
-        return back()->with('success', 'Class booking saved.');
+        return back()->with('success', 'Class booked successfully!');
     }
 
     public function cancelBooking(CancelBookingRequest $request): RedirectResponse

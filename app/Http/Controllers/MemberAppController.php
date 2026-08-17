@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassBooking;
 use App\Models\ClassSession;
+use App\Models\GymClass;
 use App\Models\Member;
 use App\Models\MemberWorkoutAssignment;
 use App\Models\Membership;
@@ -11,6 +12,7 @@ use App\Scopes\BranchScope;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class MemberAppController extends Controller
 {
@@ -104,10 +106,20 @@ class MemberAppController extends Controller
         return $member;
     }
 
-    public function dashboard(Request $request)
+    private function ensureUpcomingSessions(): void
+    {
+        $activeClasses = GymClass::withoutGlobalScope(BranchScope::class)->where('is_active', true)->get();
+        foreach ($activeClasses as $gymClass) {
+            AdminClassController::syncUpcomingSessionsForClass($gymClass);
+        }
+    }
+
+    public function dashboard(Request $request): Response
     {
         $user   = $request->user();
         $member = $this->getOrCreateMember($user);
+
+        $this->ensureUpcomingSessions();
 
         $activeMembership = $member
             ? Membership::withoutGlobalScope(BranchScope::class)
@@ -118,17 +130,20 @@ class MemberAppController extends Controller
             : null;
 
         $upcomingClasses = ClassSession::withoutGlobalScope(BranchScope::class)
+            ->whereHas('gymClass', function ($q) {
+                $q->where('is_active', true);
+            })
             ->with(['gymClass', 'trainer', 'bookings'])
             ->where('starts_at', '>=', now())
             ->orderBy('starts_at')
-            ->take(4)
+            ->take(5)
             ->get()
             ->map(fn ($session) => [
                 'id'        => $session->id,
                 'title'     => $session->gymClass?->name ?? 'Gym Session',
                 'trainer'   => $session->trainer
                     ? ($session->trainer->first_name . ' ' . $session->trainer->last_name)
-                    : 'Staff Coach',
+                    : ($session->gymClass?->trainer ? ($session->gymClass->trainer->first_name . ' ' . $session->gymClass->trainer->last_name) : 'Staff Coach'),
                 'starts_at' => $session->starts_at,
                 'capacity'  => $session->capacity_override ?? $session->gymClass?->capacity ?? 20,
                 'booked'    => $session->bookings->where('status', 'booked')->count(),
@@ -203,28 +218,35 @@ class MemberAppController extends Controller
         ]);
     }
 
-    public function classes(Request $request)
+    public function classes(Request $request): Response
     {
         $user   = $request->user();
         $member = $this->getOrCreateMember($user);
 
+        $this->ensureUpcomingSessions();
+
         $classes = ClassSession::withoutGlobalScope(BranchScope::class)
+            ->whereHas('gymClass', function ($q) {
+                $q->where('is_active', true);
+            })
             ->with(['gymClass', 'trainer', 'bookings'])
             ->where('starts_at', '>=', now())
             ->orderBy('starts_at')
             ->get()
             ->map(fn ($session) => [
                 'id'          => $session->id,
+                'gym_class_id'=> $session->gym_class_id,
                 'title'       => $session->gymClass?->name ?? 'Fitness Class',
                 'description' => $session->gymClass?->description,
                 'trainer'     => $session->trainer
                     ? ($session->trainer->first_name . ' ' . $session->trainer->last_name)
-                    : 'Staff Coach',
-                'starts_at'  => $session->starts_at,
-                'ends_at'    => $session->ends_at,
-                'capacity'   => $session->capacity_override ?? $session->gymClass?->capacity ?? 20,
-                'booked'     => $session->bookings->where('status', 'booked')->count(),
-                'is_booked'  => $member
+                    : ($session->gymClass?->trainer ? ($session->gymClass->trainer->first_name . ' ' . $session->gymClass->trainer->last_name) : 'Staff Coach'),
+                'trainer_img' => $session->trainer?->image_url,
+                'starts_at'   => $session->starts_at,
+                'ends_at'     => $session->ends_at,
+                'capacity'    => $session->capacity_override ?? $session->gymClass?->capacity ?? 20,
+                'booked'      => $session->bookings->where('status', 'booked')->count(),
+                'is_booked'   => $member
                     ? $session->bookings->where('member_id', $member->id)->where('status', 'booked')->isNotEmpty()
                     : false,
             ]);
@@ -235,7 +257,7 @@ class MemberAppController extends Controller
         ]);
     }
 
-    public function workouts(Request $request)
+    public function workouts(Request $request): Response
     {
         $user   = $request->user();
         $member = $this->getOrCreateMember($user);
@@ -277,7 +299,7 @@ class MemberAppController extends Controller
         ]);
     }
 
-    public function profile(Request $request)
+    public function profile(Request $request): Response
     {
         $user   = $request->user();
         $member = $this->getOrCreateMember($user);

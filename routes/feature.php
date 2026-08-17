@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function (): void {
         // Bookings
         Route::get('/bookings', [PortalController::class, 'bookings'])->name('portal.bookings');
         Route::post('/bookings', [PortalController::class, 'bookClass'])->name('portal.bookings.store');
+        Route::post('/book-class', [PortalController::class, 'bookClass'])->name('portal.book-class');
         Route::delete('/bookings', [PortalController::class, 'cancelBooking'])->name('portal.bookings.destroy');
 
         // Members
